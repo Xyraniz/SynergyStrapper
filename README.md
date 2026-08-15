@@ -17,6 +17,12 @@ La documentación de instalación, configuración y diagnóstico está disponibl
 
 Synergy Strapper instala y actualiza Roblox Player y Roblox Studio, ofrece una ventana de configuración, estilos de bootstrapper personalizables, gestión reversible de FastFlags, accesos directos, integraciones opcionales y herramientas de diagnóstico. El proyecto está diseñado para equipos Windows 10 o posteriores.
 
+### Novedades de la versión 1.0.6
+
+La versión 1.0.6 incorpora un **FastFlag Health Check** dentro del editor. Esta herramienta valida nombres y valores, detecta filtros mal formados, muestra advertencias y enseña el diff de cambios pendientes desde el último guardado antes de que el usuario aplique una configuración.
+
+También incorpora **previsualización de cursores**. Los cursores incluidos se muestran en la página de Mods y los cursores PNG personalizados se validan, se copian a una ubicación administrada por Synergy Strapper y se reutilizan desde allí para evitar que una ruta externa rota deje el preset inutilizable.
+
 El perfil de rendimiento incluido aplica únicamente ajustes conservadores y reversibles para reducir el uso de GPU y VRAM. No garantiza una cantidad concreta de FPS: Roblox puede cambiar o retirar FastFlags, y el resultado depende del hardware, la versión del cliente y la experiencia ejecutada. El perfil se puede desactivar desde la página de FastFlags.
 
 ## Compilación
@@ -32,7 +38,7 @@ dotnet build SynergyStrapper.sln -c Release
 dotnet publish SynergyStrapper/SynergyStrapper.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
 ```
 
-La publicación oficial v1.0.4 es autocontenida: incluye el runtime de .NET 6 Desktop para reducir la posibilidad de que el usuario tenga que instalar dependencias manualmente. El artefacto es más grande y la publicación recomendada debe realizarse en Windows para conservar correctamente los recursos del apphost y firmarse con un certificado controlado por el distribuidor.
+La publicación v1.0.6 es autocontenida: incluye el runtime de .NET Desktop para reducir la posibilidad de que el usuario tenga que instalar dependencias manualmente. El artefacto es más grande y la publicación recomendada debe realizarse en Windows para conservar correctamente los recursos del apphost y firmarse con un certificado controlado por el distribuidor.
 
 ## Atribución y licencias
 

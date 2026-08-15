@@ -49,6 +49,7 @@
                 <ToggleButton x:Name="TogglePresetsButton" Content="{x:Static resources:Strings.Menu_FastFlagEditor_ShowPresetFlags}" Click="ToggleButton_Click" Margin="0,0,12,16" />
                 <ui:Button Icon="ArrowExportRtl24" Content="{x:Static resources:Strings.Menu_FastFlagEditor_ExportJson}" Click="ExportJSONButton_Click" Margin="0,0,12,16" />
                 <ui:Button Content="Save JSON" Click="SaveJSONButton_Click" Margin="0,0,12,16" />
+                <ui:Button Content="Health check" Click="HealthCheckButton_Click" Margin="0,0,12,16" />
                 <ComboBox x:Name="ProfileComboBox" Width="170" Margin="0,0,8,16" VerticalContentAlignment="Center" />
                 <ui:Button Content="Save profile" Click="SaveProfileButton_Click" Margin="0,0,8,16" />
                 <ui:Button Content="Load profile" Click="LoadProfileButton_Click" Margin="0,0,8,16" />
@@ -57,6 +58,7 @@
             <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Right" Margin="12,0,0,16">
                 <TextBlock x:Name="TotalFlagsTextBlock" Text="Flags: 0" HorizontalAlignment="Right" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                 <TextBlock x:Name="HistoryCountTextBlock" Text="Changes: 0" HorizontalAlignment="Right" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                <TextBlock x:Name="HealthStatusTextBlock" Text="Health: not checked" HorizontalAlignment="Right" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
             </StackPanel>
         </Grid>
 

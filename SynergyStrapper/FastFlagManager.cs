@@ -16,6 +16,35 @@ namespace SynergyStrapper
 
         public bool Changed => !DictionariesEqual(OriginalProp, Prop);
 
+        public IReadOnlyList<FastFlagHealthIssue> GetHealthIssues()
+            => FastFlagHealthCheck.Validate(Prop);
+
+        public IReadOnlyList<FastFlagChange> GetPendingChanges()
+        {
+            var changes = new List<FastFlagChange>();
+            var names = OriginalProp.Keys
+                .Concat(Prop.Keys)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(x => x, StringComparer.OrdinalIgnoreCase);
+
+            foreach (string name in names)
+            {
+                bool existedBefore = OriginalProp.TryGetValue(name, out object? beforeValue);
+                bool existsNow = Prop.TryGetValue(name, out object? afterValue);
+                string? before = existedBefore ? beforeValue?.ToString() : null;
+                string? after = existsNow ? afterValue?.ToString() : null;
+
+                if (!existedBefore && existsNow)
+                    changes.Add(new FastFlagChange(name, FastFlagChangeKind.Added, null, after));
+                else if (existedBefore && !existsNow)
+                    changes.Add(new FastFlagChange(name, FastFlagChangeKind.Removed, before, null));
+                else if (!String.Equals(before, after, StringComparison.Ordinal))
+                    changes.Add(new FastFlagChange(name, FastFlagChangeKind.Changed, before, after));
+            }
+
+            return changes;
+        }
+
         public static IReadOnlyDictionary<string, string> PresetFlags = new Dictionary<string, string>
         {
             { "Rendering.ManualFullscreen", "FFlagHandleAltEnterFullscreenManually" },

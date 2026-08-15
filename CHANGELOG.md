@@ -1,3 +1,13 @@
+## [1.0.6] — Synergy Strapper
+
+### FastFlag Health Check
+
+Se añadió un chequeo integrado en FastFlag Editor que valida nombres, tipos, filtros y valores problemáticos. El chequeo muestra errores y advertencias, además de un diff de las modificaciones pendientes desde el último guardado, sin aplicar cambios automáticamente.
+
+### Cursores
+
+Se añadió una previsualización de los cursores incluidos y de los cursores personalizados. Los PNG personalizados se validan y se copian a una ubicación administrada por Synergy Strapper para que el preset no dependa de que el archivo original permanezca en una ruta externa.
+
 ## [1.0.5] — Synergy Strapper
 
 ### Navegación y organización

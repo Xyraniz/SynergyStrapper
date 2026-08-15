@@ -50,18 +50,30 @@
 
         <TextBlock Text="{x:Static resources:Strings.Common_Presets}" FontSize="20" FontWeight="Medium" Margin="0,16,0,0" />
 
-        <controls:OptionControl 
-            Header="{x:Static resources:Strings.Menu_Mods_Presets_MouseCursor_Title}" 
+        <controls:OptionControl
+            Header="{x:Static resources:Strings.Menu_Mods_Presets_MouseCursor_Title}"
             Description="{x:Static resources:Strings.Menu_Mods_Presets_MouseCursor_Description}">
-            <StackPanel Orientation="Horizontal">
-                <ComboBox Margin="5,0,0,0" Padding="10,5,10,5" Width="180" ItemsSource="{Binding CursorTypeTask.Selections, Mode=OneTime}" SelectedItem="{Binding CursorTypeTask.NewState, Mode=TwoWay}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Path=., Converter={StaticResource EnumNameConverter}}" />
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-                <ui:Button Icon="DocumentAdd16" Content="{x:Static resources:Strings.Menu_Mods_Misc_CustomCursor_Choose}" Command="{Binding ManageCustomCursorCommand}" Margin="8,0,0,0" />
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <ComboBox x:Name="CursorTypeComboBox" Margin="5,0,0,0" Padding="10,5,10,5" Width="180" ItemsSource="{Binding CursorTypeTask.Selections, Mode=OneTime}" SelectedItem="{Binding CursorTypeTask.NewState, Mode=TwoWay}" SelectionChanged="CursorSelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=., Converter={StaticResource EnumNameConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <ui:Button Icon="DocumentAdd16" Content="{x:Static resources:Strings.Menu_Mods_Misc_CustomCursor_Choose}" Command="{Binding ManageCustomCursorCommand}" Margin="8,0,0,0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5,12,0,0">
+                    <Border Width="72" Height="72" Padding="8" CornerRadius="6" Background="{DynamicResource ControlFillColorTertiaryBrush}" BorderBrush="{DynamicResource ControlElevationBorderBrush}" BorderThickness="1">
+                        <Image Source="{Binding CursorPreview}" Stretch="Uniform" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+                    </Border>
+                    <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="Cursor preview" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding CustomCursorText}" Margin="0,4,0,0" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBlock Text="Custom PNGs are copied into Synergy's managed mods folder." Margin="0,2,0,0" FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" TextWrapping="Wrap" />
+                    </StackPanel>
+                </StackPanel>
             </StackPanel>
         </controls:OptionControl>
 

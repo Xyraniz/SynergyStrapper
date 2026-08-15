@@ -111,6 +111,65 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
         {
             TotalFlagsTextBlock.Text = $"Flags: {App.FastFlags.Prop.Count}";
             HistoryCountTextBlock.Text = $"Changes: {_historyEntries.Count}";
+            UpdateHealthStatus();
+        }
+
+        private void UpdateHealthStatus()
+        {
+            IReadOnlyList<FastFlagHealthIssue> issues = App.FastFlags.GetHealthIssues();
+            int errors = issues.Count(x => x.Severity == FastFlagHealthSeverity.Error);
+            int warnings = issues.Count - errors;
+
+            HealthStatusTextBlock.Text = issues.Count == 0
+                ? "Health: OK"
+                : $"Health: {errors} error{(errors == 1 ? "" : "s")}, {warnings} warning{(warnings == 1 ? "" : "s")}";
+        }
+
+        private void HealthCheckButton_Click(object sender, RoutedEventArgs e)
+        {
+            IReadOnlyList<FastFlagHealthIssue> issues = App.FastFlags.GetHealthIssues();
+            IReadOnlyList<FastFlagChange> changes = App.FastFlags.GetPendingChanges();
+            int errors = issues.Count(x => x.Severity == FastFlagHealthSeverity.Error);
+            int warnings = issues.Count - errors;
+
+            var report = new StringBuilder();
+            report.AppendLine($"FastFlag Health Check: {errors} error{(errors == 1 ? "" : "s")}, {warnings} warning{(warnings == 1 ? "" : "s")}");
+            report.AppendLine(changes.Count == 0
+                ? "No pending changes since the last save."
+                : $"Pending changes: {changes.Count}");
+
+            if (changes.Count > 0)
+            {
+                report.AppendLine();
+                report.AppendLine("Pending changes:");
+                foreach (FastFlagChange change in changes.Take(40))
+                {
+                    string detail = change.Kind switch
+                    {
+                        FastFlagChangeKind.Added => $"added = {change.After}",
+                        FastFlagChangeKind.Removed => $"removed = {change.Before}",
+                        _ => $"{change.Before} -> {change.After}"
+                    };
+                    report.AppendLine($"  [{change.Kind}] {change.Name}: {detail}");
+                }
+
+                if (changes.Count > 40)
+                    report.AppendLine($"  ...and {changes.Count - 40} more.");
+            }
+
+            if (issues.Count > 0)
+            {
+                report.AppendLine();
+                report.AppendLine("Issues:");
+                foreach (FastFlagHealthIssue issue in issues.Take(40))
+                    report.AppendLine($"  [{issue.Severity}] {issue.Name}: {issue.Message}");
+
+                if (issues.Count > 40)
+                    report.AppendLine($"  ...and {issues.Count - 40} more.");
+            }
+
+            UpdateHealthStatus();
+            Frontend.ShowMessageBox(report.ToString(), errors > 0 ? MessageBoxImage.Error : warnings > 0 ? MessageBoxImage.Warning : MessageBoxImage.Information);
         }
 
         private void AddHistory(string message)

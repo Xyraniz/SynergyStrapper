@@ -13,7 +13,11 @@ namespace SynergyStrapper.Models.Entities
 
         public string ResourceIdentifier { get; private set; }
 
-        public Stream ResourceStream => Resource.GetStream(ResourceIdentifier);
+        public bool IsExternalResource => Path.IsPathRooted(ResourceIdentifier);
+
+        public Stream ResourceStream => IsExternalResource
+            ? File.OpenRead(ResourceIdentifier)
+            : Resource.GetStream(ResourceIdentifier);
 
         public byte[] ResourceHash { get; private set; }
 
@@ -21,6 +25,12 @@ namespace SynergyStrapper.Models.Entities
         {
             FilePath = contentPath;
             ResourceIdentifier = resource;
+
+            if (IsExternalResource && !File.Exists(ResourceIdentifier))
+            {
+                ResourceHash = Array.Empty<byte>();
+                return;
+            }
 
             using var stream = ResourceStream;
             ResourceHash = App.MD5Provider.ComputeHash(stream);
@@ -34,7 +44,21 @@ namespace SynergyStrapper.Models.Entities
             using var fileStream = FileStream;
             var fileHash = App.MD5Provider.ComputeHash(fileStream);
 
-            return fileHash.SequenceEqual(ResourceHash);
+            byte[] expectedHash;
+            if (IsExternalResource)
+            {
+                if (!File.Exists(ResourceIdentifier))
+                    return false;
+
+                using var resourceFileStream = File.OpenRead(ResourceIdentifier);
+                expectedHash = App.MD5Provider.ComputeHash(resourceFileStream);
+            }
+            else
+            {
+                expectedHash = ResourceHash;
+            }
+
+            return fileHash.SequenceEqual(expectedHash);
         }
     }
 }
