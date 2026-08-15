@@ -26,7 +26,8 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
             {
                 Frontend.ShowMessageBox("Choose a custom PNG before selecting the custom cursor preset.", MessageBoxImage.Warning);
                 viewModel.CursorTypeTask.NewState = Enums.CursorType.Default;
-                CursorTypeComboBox.SelectedItem = Enums.CursorType.Default;
+                if (sender is System.Windows.Controls.ComboBox comboBox)
+                    comboBox.SelectedItem = Enums.CursorType.Default;
             }
 
             Dispatcher.BeginInvoke(

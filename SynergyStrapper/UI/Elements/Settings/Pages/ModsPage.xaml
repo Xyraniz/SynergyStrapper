@@ -55,7 +55,7 @@
             Description="{x:Static resources:Strings.Menu_Mods_Presets_MouseCursor_Description}">
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal">
-                    <ComboBox x:Name="CursorTypeComboBox" Margin="5,0,0,0" Padding="10,5,10,5" Width="180" ItemsSource="{Binding CursorTypeTask.Selections, Mode=OneTime}" SelectedItem="{Binding CursorTypeTask.NewState, Mode=TwoWay}" SelectionChanged="CursorSelectionChanged">
+                    <ComboBox Margin="5,0,0,0" Padding="10,5,10,5" Width="180" ItemsSource="{Binding CursorTypeTask.Selections, Mode=OneTime}" SelectedItem="{Binding CursorTypeTask.NewState, Mode=TwoWay}" SelectionChanged="CursorSelectionChanged">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Path=., Converter={StaticResource EnumNameConverter}}" />
