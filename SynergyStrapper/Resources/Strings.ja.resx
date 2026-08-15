@@ -164,7 +164,7 @@
     <value>他のインスタンスを待機中...</value>
   </data>
   <data name="Bootstrapper.StylePreview.ImageCancel" xml:space="preserve">
-    <value>プレビュー中 - 右上の✕ボタンで閉じます</value>
+    <value>プレビュー中 - 右上のXボタンで閉じます</value>
     <comment>Text for style previews that use an X button. Currently only applies to Byfron</comment>
   </data>
   <data name="Bootstrapper.StylePreview.TextCancel" xml:space="preserve">

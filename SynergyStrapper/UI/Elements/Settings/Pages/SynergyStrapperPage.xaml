@@ -1,4 +1,4 @@
-﻿<ui:UiPage x:Class="SynergyStrapper.UI.Elements.Settings.Pages.SynergyStrapperPage"
+<ui:UiPage x:Class="SynergyStrapper.UI.Elements.Settings.Pages.SynergyStrapperPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -55,7 +55,7 @@
 
         <controls:OptionControl 
             Header="{x:Static resources:Strings.Menu_SynergyStrapper_Analytics_Title}"
-            Description="{Binding Source={x:Static resources:Strings.Menu_SynergyStrapper_Analytics_Description}, Converter={StaticResource StringFormatConverter}, ConverterParameter='https://github.com/Xyraniz/SynergyStrapper/wiki/info/privacy-policy/'}">
+            Description="{Binding Source={x:Static resources:Strings.Menu_SynergyStrapper_Analytics_Description}, Converter={StaticResource StringFormatConverter}, ConverterParameter='https://xyraniz.github.io/SynergyStrapper/wiki.html'}">
             <ui:ToggleSwitch IsChecked="{Binding AnalyticsEnabled, Mode=TwoWay}" />
         </controls:OptionControl>
 

@@ -19,7 +19,7 @@ namespace SynergyStrapper.UI.ViewModels.Settings
 
         public ICommand OpenFastFlagEditorCommand => new RelayCommand(OpenFastFlagEditor);
 
-        public Visibility CanShowFastFlagEditor => App.IsStudioInstalled ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility CanShowFastFlagEditor => Visibility.Visible;
 
         public bool UseFastFlagManager
         {

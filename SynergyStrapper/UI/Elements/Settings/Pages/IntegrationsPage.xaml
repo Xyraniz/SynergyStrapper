@@ -1,4 +1,4 @@
-﻿<ui:UiPage x:Class="SynergyStrapper.UI.Elements.Settings.Pages.IntegrationsPage"
+<ui:UiPage x:Class="SynergyStrapper.UI.Elements.Settings.Pages.IntegrationsPage"
       x:Name="IntegrationsPageView"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -20,7 +20,7 @@
         <controls:OptionControl 
             Header="{x:Static resources:Strings.Menu_Integrations_EnableActivityTracking_Title}" 
             Description="{x:Static resources:Strings.Menu_Integrations_EnableActivityTracking_Description}" 
-            HelpLink="https://github.com/Xyraniz/SynergyStrapper/wiki/features/activity-tracking/"
+            HelpLink="https://xyraniz.github.io/SynergyStrapper/wiki.html"
             x:Name="ActivityTrackingOption">
             <ui:ToggleSwitch IsChecked="{Binding ActivityTrackingEnabled, Mode=TwoWay}" />
         </controls:OptionControl>
@@ -28,25 +28,25 @@
         <controls:OptionControl 
             Header="{x:Static resources:Strings.Menu_Integrations_QueryServerLocation_Title}" 
             Description="{Binding Source={x:Static resources:Strings.Menu_Integrations_QueryServerLocation_Description}, Converter={StaticResource StringFormatConverter}, ConverterParameter='https://ipinfo.io'}"
-            HelpLink="https://github.com/Xyraniz/SynergyStrapper/wiki/features/server-location-hints/"
+            HelpLink="https://xyraniz.github.io/SynergyStrapper/wiki.html"
             IsEnabled="{Binding InnerContent.IsChecked, ElementName=ActivityTrackingOption, Mode=OneWay}">
             <ui:ToggleSwitch IsChecked="{Binding ShowServerDetailsEnabled, Mode=TwoWay}" />
         </controls:OptionControl>
 
         <controls:OptionControl 
             Header="{x:Static resources:Strings.Menu_Integrations_DesktopApp_Title}" 
-            Description="{Binding Source={x:Static resources:Strings.Menu_Integrations_DesktopApp_Description}, Converter={StaticResource StringFormatConverter}, ConverterParameter='https://github.com/Xyraniz/SynergyStrapper/wiki/features/dont-exit-to-desktop-app/'}"
-            HelpLink="https://github.com/Xyraniz/SynergyStrapper/wiki/features/dont-exit-to-desktop-app/"
+            Description="{Binding Source={x:Static resources:Strings.Menu_Integrations_DesktopApp_Description}, Converter={StaticResource StringFormatConverter}, ConverterParameter='https://xyraniz.github.io/SynergyStrapper/wiki.html'}"
+            HelpLink="https://xyraniz.github.io/SynergyStrapper/wiki.html"
             IsEnabled="{Binding InnerContent.IsChecked, ElementName=ActivityTrackingOption, Mode=OneWay}">
             <ui:ToggleSwitch IsChecked="{Binding DisableAppPatchEnabled, Mode=TwoWay}" />
         </controls:OptionControl>
 
         <TextBlock Text="{x:Static resources:Strings.Common_DiscordRichPresence}" FontSize="20" FontWeight="Medium" Margin="0,16,0,0" />
-        <controls:MarkdownTextBlock MarkdownText="{Binding Source={x:Static resources:Strings.Menu_Integrations_RequiresActivityTracking}, Converter={StaticResource StringFormatConverter}, ConverterParameter='https://github.com/Xyraniz/SynergyStrapper/wiki/features/discord-rich-presence/'}" TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+        <controls:MarkdownTextBlock MarkdownText="{Binding Source={x:Static resources:Strings.Menu_Integrations_RequiresActivityTracking}, Converter={StaticResource StringFormatConverter}, ConverterParameter='https://xyraniz.github.io/SynergyStrapper/wiki.html'}" TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
 
         <controls:OptionControl 
             Header="{x:Static resources:Strings.Menu_Integrations_ShowGameActivity_Title}" 
-            Description="{Binding Source={x:Static resources:Strings.Menu_Integrations_ShowGameActivity_Description}, Converter={StaticResource StringFormatConverter}, ConverterParameter='https://github.com/Xyraniz/SynergyStrapper/wiki/help/discord-rich-presence-not-working/'}"
+            Description="{Binding Source={x:Static resources:Strings.Menu_Integrations_ShowGameActivity_Description}, Converter={StaticResource StringFormatConverter}, ConverterParameter='https://xyraniz.github.io/SynergyStrapper/wiki.html'}"
             IsEnabled="{Binding InnerContent.IsChecked, ElementName=ActivityTrackingOption, Mode=OneWay}"
             x:Name="DiscordActivityOption">
             <ui:ToggleSwitch IsChecked="{Binding DiscordActivityEnabled, Mode=TwoWay}" />

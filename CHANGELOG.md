@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.0.5] — Synergy Strapper
+
+### Navegación y organización
+
+Se reorganizó la ventana de configuración en las secciones **Core**, **Configuration** y **Tools**, con encabezados y separadores visuales. Se añadió **FastFlag Editor** como una pestaña dedicada y visible junto a **FastFlags**, y se comprobó que no quedaran entradas de navegación ocultas por error. La ventana ahora recuerda la última página seleccionada y ofrece una búsqueda global con resaltado de coincidencias en la página activa.
+
+### FastFlag Editor
+
+Se amplió el editor con eliminación total protegida por confirmación, guardado de JSON a archivo, contador de flags, etiquetas por tipo, indicador de flags asociadas a presets e historial de cambios de la sesión. La edición inline vuelve a validar el nombre completo de la flag antes de permitir un renombrado, y las operaciones de alta, importación, eliminación, perfiles y carga de configuraciones actualizan el historial y las estadísticas.
+
+### Ayuda, web y presentación
+
+Se sustituyeron los destinos antiguos de GitHub Wiki por la wiki oficial alojada en `https://xyraniz.github.io/SynergyStrapper/wiki.html` en la aplicación, plantillas y documentación enlazada. Los avisos de la página web ya no usan símbolos de texto como iconos: ahora muestran una marca geométrica dibujada con CSS. También se eliminó el emoji de verificación de la presencia de Discord y se conservó una etiqueta textual neutra.
+
+### Verificación
+
+Se actualizaron la versión de proyecto, ensamblado y archivo a `1.0.5`. La compilación y la publicación autocontenida `win-x64` deben ejecutarse en el workflow Windows de GitHub Actions, ya que este entorno Linux no incluye el SDK .NET ni puede iniciar la interfaz WPF.
+
 ## [1.0.4] — Synergy Strapper
 
 ### Correcciones críticas

@@ -7,8 +7,8 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
     <ApplicationIcon>SynergyStrapper.ico</ApplicationIcon>
-    <Version>1.0.4</Version>
-    <FileVersion>1.0.4</FileVersion>
+    <Version>1.0.5</Version>
+    <FileVersion>1.0.5</FileVersion>
     <AssemblyName>SynergyStrapper</AssemblyName>
     <Product>Synergy Strapper</Product>
     <Company>Xyraniz</Company>

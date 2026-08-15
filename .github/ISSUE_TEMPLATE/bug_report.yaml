@@ -6,9 +6,9 @@ body:
       value: |
         > [!IMPORTANT]
         > SynergyStrapper isn't actively maintained anymore. We might not get to your report unless it may be important (like if it's about a feature breaking). Sorry about that.
-        > If your problem keeps happening, it can typically be fixed by [reinstalling](https://github.com/Xyraniz/SynergyStrapper/wiki/help/uninstalling-synergystrapper/).
+        > If your problem keeps happening, it can typically be fixed by [reinstalling](https://xyraniz.github.io/SynergyStrapper/wiki.html).
         ### **Instructions**
-        - Before you open this report, please [check the Wiki first](https://github.com/Xyraniz/SynergyStrapper/wiki/help). Most common problems will be addressed here.
+        - Before you open this report, please [check the Wiki first](https://xyraniz.github.io/SynergyStrapper/wiki.html). Most common problems will be addressed here.
         - Also, don't open a report if it's in the [currently known issues](https://github.com/Xyraniz/SynergyStrapper/issues/5779). Common problems will be mentioned here too.
         - Make sure you are using the [latest version of SynergyStrapper](https://github.com/Xyraniz/SynergyStrapper/releases/latest). Your report won't be valid if you aren't.
         - If you're finding that some feature is missing, it's probably because of a recent update. Check the [latest version's release notes](https://github.com/Xyraniz/SynergyStrapper/releases/latest).

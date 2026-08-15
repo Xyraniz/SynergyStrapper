@@ -1,13 +1,11 @@
-﻿using System.Windows;
+﻿using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Collections.ObjectModel;
 
 using Wpf.Ui.Mvvm.Contracts;
 
 using SynergyStrapper.UI.Elements.Dialogs;
-using Newtonsoft.Json.Linq;
-using System.Xml.Linq;
 
 namespace SynergyStrapper.UI.Elements.Settings.Pages
 {
@@ -16,28 +14,25 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
     /// </summary>
     public partial class FastFlagEditorPage
     {
-        // believe me when i say there is absolutely zero point to using mvvm for this
-        // using a datagrid is a codebehind thing only and thats it theres literally no way around it
-
         private readonly ObservableCollection<FastFlag> _fastFlagList = new();
         private readonly List<string> _validPrefixes = new()
         {
             "FFlag", "DFFlag", "SFFlag", "FInt", "DFInt", "FString", "DFString", "FLog", "DFLog"
         };
+        private readonly List<string> _historyEntries = new();
 
-        // values must match the entire string to avoid cases where half the string
-        // matches but the filter would still be invalid
         private readonly Regex _boolFilterPattern = new("^(?:true|false)(;[\\d]{1,})+$", RegexOptions.IgnoreCase);
         private readonly Regex _intFilterPattern = new("^([\\d]{1,})?(;[\\d]{1,})+$", RegexOptions.IgnoreCase);
         private readonly Regex _stringFilterPattern = new("^[^;]*(;[\\d]{1,})+$", RegexOptions.IgnoreCase);
 
-        private bool _showPresets = false;
+        private bool _showPresets;
         private string _searchFilter = "";
 
         public FastFlagEditorPage()
         {
             InitializeComponent();
             RefreshProfiles();
+            UpdateStatistics();
         }
 
         private void RefreshProfiles()
@@ -53,7 +48,6 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
         private void ReloadList()
         {
             var selectedEntry = DataGrid.SelectedItem as FastFlag;
-
             _fastFlagList.Clear();
 
             var presetFlags = FastFlagManager.PresetFlags.Values;
@@ -63,38 +57,75 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
                 if (!_showPresets && presetFlags.Contains(pair.Key))
                     continue;
 
-                if (!pair.Key.ToLower().Contains(_searchFilter.ToLower()))
+                if (!pair.Key.Contains(_searchFilter, StringComparison.OrdinalIgnoreCase))
                     continue;
 
                 var entry = new FastFlag
                 {
-                    // Enabled = true,
                     Name = pair.Key,
-                    Value = pair.Value.ToString()!
+                    Value = pair.Value?.ToString() ?? String.Empty
                 };
-
-                /* if (entry.Name.StartsWith("Disable"))
-                {
-                    entry.Enabled = false;
-                    entry.Name = entry.Name[7..];
-                } */
-
+                entry.UpdateMetadata(GetTags(entry.Name), presetFlags.Contains(entry.Name));
                 _fastFlagList.Add(entry);
             }
 
             if (DataGrid.ItemsSource is null)
                 DataGrid.ItemsSource = _fastFlagList;
 
+            UpdateStatistics();
+
             if (selectedEntry is null)
                 return;
 
-            var newSelectedEntry = _fastFlagList.Where(x => x.Name == selectedEntry.Name).FirstOrDefault();
-
+            var newSelectedEntry = _fastFlagList.FirstOrDefault(x => x.Name == selectedEntry.Name);
             if (newSelectedEntry is null)
                 return;
-            
+
             DataGrid.SelectedItem = newSelectedEntry;
             DataGrid.ScrollIntoView(newSelectedEntry);
+        }
+
+        private IReadOnlyList<string> GetTags(string name)
+        {
+            var tags = new List<string>();
+
+            if (name.StartsWith("FFlag", StringComparison.Ordinal) || name.StartsWith("DFFlag", StringComparison.Ordinal) || name.StartsWith("SFFlag", StringComparison.Ordinal))
+                tags.Add("Boolean");
+            else if (name.StartsWith("FInt", StringComparison.Ordinal) || name.StartsWith("DFInt", StringComparison.Ordinal))
+                tags.Add("Integer");
+            else if (name.StartsWith("FString", StringComparison.Ordinal) || name.StartsWith("DFString", StringComparison.Ordinal))
+                tags.Add("String");
+            else if (name.StartsWith("FLog", StringComparison.Ordinal) || name.StartsWith("DFLog", StringComparison.Ordinal))
+                tags.Add("Log");
+
+            if (name.StartsWith("D", StringComparison.Ordinal))
+                tags.Add("Debug");
+
+            if (FastFlagManager.PresetFlags.Values.Contains(name))
+                tags.Add("Preset");
+
+            return tags;
+        }
+
+        private void UpdateStatistics()
+        {
+            TotalFlagsTextBlock.Text = $"Flags: {App.FastFlags.Prop.Count}";
+            HistoryCountTextBlock.Text = $"Changes: {_historyEntries.Count}";
+        }
+
+        private void AddHistory(string message)
+        {
+            string entry = $"{DateTime.Now:HH:mm:ss}  {message}";
+            _historyEntries.Insert(0, entry);
+
+            if (_historyEntries.Count > 200)
+                _historyEntries.RemoveAt(_historyEntries.Count - 1);
+
+            HistoryListBox.Items.Clear();
+            foreach (string historyEntry in _historyEntries)
+                HistoryListBox.Items.Add(historyEntry);
+
+            UpdateStatistics();
         }
 
         private void ClearSearch(bool refresh = true)
@@ -134,17 +165,19 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
 
                 entry = new FastFlag
                 {
-                    // Enabled = true,
                     Name = name,
                     Value = value
                 };
-
-                if (!name.Contains(_searchFilter))
-                    ClearSearch();
-
-                _fastFlagList.Add(entry);
+                entry.UpdateMetadata(GetTags(name), FastFlagManager.PresetFlags.Values.Contains(name));
 
                 App.FastFlags.SetValue(entry.Name, entry.Value);
+                _fastFlagList.Add(entry);
+                AddHistory($"Added {name}");
+
+                if (!name.Contains(_searchFilter, StringComparison.OrdinalIgnoreCase))
+                    ClearSearch();
+                else
+                    ReloadList();
             }
             else
             {
@@ -159,7 +192,7 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
                     refresh = true;
                 }
 
-                if (!name.Contains(_searchFilter))
+                if (!name.Contains(_searchFilter, StringComparison.OrdinalIgnoreCase))
                 {
                     ClearSearch(false);
                     refresh = true;
@@ -168,7 +201,7 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
                 if (refresh)
                     ReloadList();
 
-                entry = _fastFlagList.Where(x => x.Name == name).FirstOrDefault();
+                entry = _fastFlagList.FirstOrDefault(x => x.Name == name);
             }
 
             DataGrid.SelectedItem = entry;
@@ -177,22 +210,16 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
 
         private void ImportJSON(string json)
         {
-            Dictionary<string, object>? list = null;
+            Dictionary<string, object>? list;
 
             json = json.Trim();
-
-            // autocorrect where possible
             if (!json.StartsWith('{'))
                 json = '{' + json;
 
             if (!json.EndsWith('}'))
             {
                 int lastIndex = json.LastIndexOf('}');
-
-                if (lastIndex == -1)
-                    json += '}';
-                else
-                    json = json.Substring(0, lastIndex+1);
+                json = lastIndex == -1 ? json + '}' : json[..(lastIndex + 1)];
             }
 
             try
@@ -202,57 +229,42 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
                     ReadCommentHandling = JsonCommentHandling.Skip,
                     AllowTrailingCommas = true
                 };
-
                 list = JsonSerializer.Deserialize<Dictionary<string, object>>(json, options);
-
                 if (list is null)
                     throw new Exception("JSON deserialization returned null");
             }
             catch (Exception ex)
             {
-                Frontend.ShowMessageBox(                    
-                    String.Format(Strings.Menu_FastFlagEditor_InvalidJSON, ex.Message),
-                    MessageBoxImage.Error
-                );
-
+                Frontend.ShowMessageBox(String.Format(Strings.Menu_FastFlagEditor_InvalidJSON, ex.Message), MessageBoxImage.Error);
                 ShowAddDialog();
-
                 return;
             }
 
             if (list.Count > 16)
             {
-                var result = Frontend.ShowMessageBox(
-                    Strings.Menu_FastFlagEditor_LargeConfig, 
-                    MessageBoxImage.Warning,
-                    MessageBoxButton.YesNo
-                );
-
+                var result = Frontend.ShowMessageBox(Strings.Menu_FastFlagEditor_LargeConfig, MessageBoxImage.Warning, MessageBoxButton.YesNo);
                 if (result != MessageBoxResult.Yes)
                     return;
             }
 
-            var conflictingFlags = App.FastFlags.Prop.Where(x => list.ContainsKey(x.Key)).Select(x => x.Key);
+            var conflictingFlags = App.FastFlags.Prop.Where(x => list.ContainsKey(x.Key)).Select(x => x.Key).ToList();
             bool overwriteConflicting = false;
 
-            if (conflictingFlags.Any())
+            if (conflictingFlags.Count > 0)
             {
-                int count = conflictingFlags.Count();
-
                 string message = String.Format(
                     Strings.Menu_FastFlagEditor_ConflictingImport,
-                    count,
+                    conflictingFlags.Count,
                     String.Join(", ", conflictingFlags.Take(25))
                 );
 
-                if (count > 25)
+                if (conflictingFlags.Count > 25)
                     message += "...";
 
-                var result = Frontend.ShowMessageBox(message, MessageBoxImage.Question, MessageBoxButton.YesNo);
-
-                overwriteConflicting = result == MessageBoxResult.Yes;
+                overwriteConflicting = Frontend.ShowMessageBox(message, MessageBoxImage.Question, MessageBoxButton.YesNo) == MessageBoxResult.Yes;
             }
 
+            int imported = 0;
             foreach (var pair in list)
             {
                 if (App.FastFlags.Prop.ContainsKey(pair.Key) && !overwriteConflicting)
@@ -261,16 +273,16 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
                 if (pair.Value is null)
                     continue;
 
-                var val = pair.Value.ToString();
-
-                if (val is null)
-                    continue;
-
-                if (!ValidateFlagEntry(pair.Key, val))
+                string? value = pair.Value.ToString();
+                if (value is null || !ValidateFlagEntry(pair.Key, value))
                     continue;
 
                 App.FastFlags.SetValue(pair.Key, pair.Value);
+                imported++;
             }
+
+            if (imported > 0)
+                AddHistory($"Imported {imported} flag{(imported == 1 ? "" : "s")} from JSON");
 
             ClearSearch();
         }
@@ -284,16 +296,16 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
                 errorMessage = Strings.Menu_FastFlagEditor_InvalidPrefix;
             else if (!name.All(x => char.IsLetterOrDigit(x) || x == '_'))
                 errorMessage = Strings.Menu_FastFlagEditor_InvalidCharacter;
-            
+
             if (name.EndsWith("_PlaceFilter") || name.EndsWith("_DataCenterFilter"))
-                errorMessage = !ValidateFilter(name, value) ? Strings.Menu_FastFlagEditor_InvalidPlaceFilter : ""; 
+                errorMessage = !ValidateFilter(name, value) ? Strings.Menu_FastFlagEditor_InvalidPlaceFilter : "";
             else if ((name.StartsWith("FInt") || name.StartsWith("DFInt")) && !Int32.TryParse(value, out _))
                 errorMessage = Strings.Menu_FastFlagEditor_InvalidNumberValue;
             else if ((name.StartsWith("FFlag") || name.StartsWith("DFFlag")) && lowerValue != "true" && lowerValue != "false")
                 errorMessage = Strings.Menu_FastFlagEditor_InvalidBoolValue;
-            
+
             if (!String.IsNullOrEmpty(errorMessage))
-            { 
+            {
                 Frontend.ShowMessageBox(String.Format(errorMessage, name), MessageBoxImage.Error);
                 return false;
             }
@@ -303,32 +315,28 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
 
         private bool ValidateFilter(string name, string value)
         {
-            if(name.StartsWith("FFlag") || name.StartsWith("DFFlag"))
+            if (name.StartsWith("FFlag") || name.StartsWith("DFFlag"))
                 return _boolFilterPattern.IsMatch(value);
             if (name.StartsWith("FInt") || name.StartsWith("DFInt"))
                 return _intFilterPattern.IsMatch(value);
             if (name.StartsWith("FString") || name.StartsWith("DFString") || name.StartsWith("FLog") || name.StartsWith("DFLog"))
                 return _stringFilterPattern.IsMatch(value);
-            
+
             return false;
         }
 
-        // refresh list on page load to synchronize with preset page
         private void Page_Loaded(object sender, RoutedEventArgs e) => ReloadList();
 
         private void DataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            if (e.Row.DataContext is not FastFlag entry)
-                return;
-
-            if (e.EditingElement is not TextBox textbox)
+            if (e.Row.DataContext is not FastFlag entry || e.EditingElement is not TextBox textbox)
                 return;
 
             switch (e.Column.Header)
             {
                 case "Name":
                     string oldName = entry.Name;
-                    string newName = textbox.Text;
+                    string newName = textbox.Text.Trim();
 
                     if (newName == oldName)
                         return;
@@ -341,14 +349,19 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
                         return;
                     }
 
+                    if (!ValidateFlagEntry(newName, entry.Value))
+                    {
+                        e.Cancel = true;
+                        textbox.Text = oldName;
+                        return;
+                    }
+
                     App.FastFlags.SetValue(oldName, null);
                     App.FastFlags.SetValue(newName, entry.Value);
-
-                    if (!newName.Contains(_searchFilter))
-                        ClearSearch();
-
                     entry.Name = newName;
-
+                    entry.UpdateMetadata(GetTags(newName), FastFlagManager.PresetFlags.Values.Contains(newName));
+                    AddHistory($"Renamed {oldName} to {newName}");
+                    ReloadList();
                     break;
 
                 case "Value":
@@ -362,8 +375,12 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
                         return;
                     }
 
-                    App.FastFlags.SetValue(entry.Name, newValue);
+                    if (oldValue == newValue)
+                        return;
 
+                    App.FastFlags.SetValue(entry.Name, newValue);
+                    entry.Value = newValue;
+                    AddHistory($"Changed {entry.Name}");
                     break;
             }
         }
@@ -378,16 +395,37 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            var tempList = new List<FastFlag>();
+            var entries = DataGrid.SelectedItems.OfType<FastFlag>().ToList();
+            if (entries.Count == 0)
+                return;
 
-            foreach (FastFlag entry in DataGrid.SelectedItems)
-                tempList.Add(entry);
-
-            foreach (FastFlag entry in tempList)
+            foreach (FastFlag entry in entries)
             {
                 _fastFlagList.Remove(entry);
                 App.FastFlags.SetValue(entry.Name, null);
+                AddHistory($"Deleted {entry.Name}");
             }
+
+            ReloadList();
+        }
+
+        private void DeleteAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (App.FastFlags.Prop.Count == 0)
+                return;
+
+            if (Frontend.ShowMessageBox(
+                    $"Delete all {App.FastFlags.Prop.Count} FastFlags? This cannot be undone unless you have a profile or backup.",
+                    MessageBoxImage.Warning,
+                    MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                return;
+
+            int count = App.FastFlags.Prop.Count;
+            foreach (string name in App.FastFlags.Prop.Keys.ToList())
+                App.FastFlags.SetValue(name, null);
+
+            AddHistory($"Deleted all {count} FastFlags");
+            ReloadList();
         }
 
         private void ToggleButton_Click(object sender, RoutedEventArgs e)
@@ -401,10 +439,38 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
 
         private void ExportJSONButton_Click(object sender, RoutedEventArgs e)
         {
-            string json = JsonSerializer.Serialize(App.FastFlags.Prop, new JsonSerializerOptions { WriteIndented = true });
-            Clipboard.SetDataObject(json);
-            Frontend.ShowMessageBox(Strings.Menu_FastFlagEditor_JsonCopiedToClipboard, MessageBoxImage.Information);
+            Clipboard.SetDataObject(BuildJson());
+            Frontend.ShowMessageBox("FastFlags JSON copied to the clipboard.", MessageBoxImage.Information);
         }
+
+        private void SaveJSONButton_Click(object sender, RoutedEventArgs e)
+        {
+            var saveFileDialog = new Microsoft.Win32.SaveFileDialog
+            {
+                Filter = "JSON files (*.json)|*.json|Text files (*.txt)|*.txt",
+                Title = "Save FastFlags JSON",
+                FileName = "ClientAppSettings.json"
+            };
+
+            if (saveFileDialog.ShowDialog() != true)
+                return;
+
+            try
+            {
+                File.WriteAllText(saveFileDialog.FileName, BuildJson(), Encoding.UTF8);
+                Frontend.ShowMessageBox("FastFlags JSON saved successfully.", MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                App.Logger.WriteException("FastFlagEditorPage::SaveJSON", ex);
+                Frontend.ShowMessageBox($"The JSON file could not be saved: {ex.Message}", MessageBoxImage.Error);
+            }
+        }
+
+        private static string BuildJson() => JsonSerializer.Serialize(
+            App.FastFlags.Prop,
+            new JsonSerializerOptions { WriteIndented = true }
+        );
 
         private void SaveProfileButton_Click(object sender, RoutedEventArgs e)
         {
@@ -443,6 +509,7 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
                 return;
             }
 
+            AddHistory($"Loaded profile '{name}'");
             ReloadList();
             Frontend.ShowMessageBox($"Profile '{name}' loaded.", MessageBoxImage.Information);
         }

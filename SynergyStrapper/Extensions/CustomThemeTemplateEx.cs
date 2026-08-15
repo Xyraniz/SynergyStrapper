@@ -1,10 +1,10 @@
-﻿using System.Text;
+using System.Text;
 
 namespace SynergyStrapper.Extensions
 {
     static class CustomThemeTemplateEx
     {
-        const string EXAMPLES_URL = "https://github.com/Xyraniz/SynergyStrapper/wiki/Custom-bootstrapper-examples";
+        const string EXAMPLES_URL = "https://xyraniz.github.io/SynergyStrapper/wiki.html";
 
         public static string GetFileName(this CustomThemeTemplate template)
         {

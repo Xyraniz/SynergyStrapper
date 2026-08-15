@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 
 using SynergyStrapper.UI.Elements.Bootstrapper;
 using SynergyStrapper.UI.Elements.Dialogs;
@@ -24,7 +24,7 @@ namespace SynergyStrapper.UI
 
             string info = String.Format(
                 Strings.Dialog_PlayerError_FailedLaunch,
-                $"https://github.com/Xyraniz/SynergyStrapper/wiki/help/roblox-crashes-or-does-not-launch/"
+                $"https://xyraniz.github.io/SynergyStrapper/wiki.html"
             );
 
             ShowMessageBox(info, MessageBoxImage.Error);

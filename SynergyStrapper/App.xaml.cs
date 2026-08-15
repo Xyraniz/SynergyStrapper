@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Windows;
 using System.Windows.Shell;
@@ -22,7 +22,7 @@ namespace SynergyStrapper
         public const string ProjectOwner = "Xyraniz";
         public const string ProjectRepository = "Xyraniz/SynergyStrapper";
         public const string ProjectDownloadLink = "https://github.com/Xyraniz/SynergyStrapper/releases/latest";
-        public const string ProjectHelpLink = "https://github.com/Xyraniz/SynergyStrapper/wiki";
+        public const string ProjectHelpLink = "https://xyraniz.github.io/SynergyStrapper/wiki.html";
         public const string ProjectSupportLink = "https://github.com/Xyraniz/SynergyStrapper/issues/new";
 
         public const string RobloxPlayerAppName = "RobloxPlayerBeta";
