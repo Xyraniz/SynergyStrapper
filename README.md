@@ -17,6 +17,8 @@ Synergy Strapper instala y actualiza Roblox Player y Roblox Studio, ofrece una v
 
 El perfil de rendimiento incluido aplica únicamente ajustes conservadores y reversibles para reducir el uso de GPU y VRAM. No garantiza una cantidad concreta de FPS: Roblox puede cambiar o retirar FastFlags, y el resultado depende del hardware, la versión del cliente y la experiencia ejecutada. El perfil se puede desactivar desde la página de FastFlags.
 
+Desde la v1.0.2, la página de Synergy Strapper incluye una limpieza manual de mantenimiento. La acción elimina archivos con más de 30 días únicamente en las carpetas conocidas de logs y caché de Synergy Strapper y Roblox, conserva el log activo, ignora archivos de sistema y limita la operación a 200 archivos por carpeta.
+
 ## Compilación
 
 La solución requiere el SDK de .NET 6.0.428 indicado en `global.json`, además de un entorno capaz de compilar WPF para Windows. El submódulo `wpfui` debe estar inicializado antes de restaurar dependencias.

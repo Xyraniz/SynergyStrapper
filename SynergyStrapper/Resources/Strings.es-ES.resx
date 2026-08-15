@@ -1431,4 +1431,22 @@ Revirtiendo al tema {1}.</value>
   <data name="Menu.SynergyStrapper.UpdateStatus.Button" xml:space="preserve">
     <value>Buscar ahora</value>
   </data>
+  <data name="Menu.SynergyStrapper.Cleaner.Title" xml:space="preserve">
+    <value>Limpiar logs y caché antiguos</value>
+  </data>
+  <data name="Menu.SynergyStrapper.Cleaner.Description" xml:space="preserve">
+    <value>Elimina archivos de más de 30 días de las carpetas de caché de Synergy Strapper y Roblox.</value>
+  </data>
+  <data name="Menu.SynergyStrapper.Cleaner.Button" xml:space="preserve">
+    <value>Limpiar ahora</value>
+  </data>
+  <data name="Menu.SynergyStrapper.Cleaner.Note" xml:space="preserve">
+    <value>Solo revisa carpetas conocidas de caché y logs. El log actual siempre se conserva y la operación está limitada a 200 archivos por carpeta.</value>
+  </data>
+  <data name="Menu.SynergyStrapper.Cleaner.Result" xml:space="preserve">
+    <value>Limpieza terminada. Eliminados: {0}. No se pudieron eliminar: {1}. Omitidos o recientes: {2}.</value>
+  </data>
+  <data name="Menu.SynergyStrapper.Cleaner.Error" xml:space="preserve">
+    <value>No se pudo completar la limpieza. Tus archivos no se modificaron.</value>
+  </data>
 </root>

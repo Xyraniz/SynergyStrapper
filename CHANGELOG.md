@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.2] — Synergy Strapper
+
+### Mantenimiento y experiencia de usuario
+
+Se añadió una herramienta manual para limpiar archivos antiguos desde la página de configuración. La acción elimina archivos con más de 30 días en las carpetas conocidas de logs y descargas de Synergy Strapper, los logs de Roblox y la caché temporal de Roblox. La operación se ejecuta fuera del hilo de la interfaz para que la ventana no se congele mientras revisa los archivos.
+
+La limpieza conserva siempre el log activo, ignora archivos de sistema y puntos de reanálisis, comprueba que cada archivo esté dentro de una raíz permitida y limita la eliminación a 200 archivos por carpeta. Al finalizar muestra cuántos archivos se eliminaron, cuáles no pudieron eliminarse y cuáles se omitieron por ser recientes o no cumplir los límites de seguridad. Se añadieron textos localizados para español y se documentó el alcance en el README.
+
+### Versión y distribución
+
+Se actualizó la versión del proyecto y del ejecutable a `1.0.2`. La release mantiene el contrato de distribución existente: el workflow compila desde el código fuente en Windows y publica únicamente `SynergyStrapper.exe` y su checksum SHA-256 como assets de GitHub Release.
+
 ## [1.0.1] — Synergy Strapper
 
 ### Actualización y distribución

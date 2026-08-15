@@ -2620,6 +2620,60 @@ namespace SynergyStrapper.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Gather information that can be uploaded online to troubleshoot a problem you&apos;re having..
         /// </summary>
+        /// <summary>
+        ///   Looks up a localized string similar to Clean now.
+        /// </summary>
+        public static string Menu_SynergyStrapper_Cleaner_Button {
+            get {
+                return ResourceManager.GetString("Menu.SynergyStrapper.Cleaner.Button", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Remove files older than 30 days from Synergy Strapper and Roblox cache folders..
+        /// </summary>
+        public static string Menu_SynergyStrapper_Cleaner_Description {
+            get {
+                return ResourceManager.GetString("Menu.SynergyStrapper.Cleaner.Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The cleanup could not be completed. Your files were left unchanged..
+        /// </summary>
+        public static string Menu_SynergyStrapper_Cleaner_Error {
+            get {
+                return ResourceManager.GetString("Menu.SynergyStrapper.Cleaner.Error", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to This only scans known cache and log folders. The current log is always kept, and the operation is limited to 200 files per folder..
+        /// </summary>
+        public static string Menu_SynergyStrapper_Cleaner_Note {
+            get {
+                return ResourceManager.GetString("Menu.SynergyStrapper.Cleaner.Note", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Cleanup finished. Deleted: {0}. Could not delete: {1}. Skipped or still recent: {2}..
+        /// </summary>
+        public static string Menu_SynergyStrapper_Cleaner_Result {
+            get {
+                return ResourceManager.GetString("Menu.SynergyStrapper.Cleaner.Result", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Clean old logs and cache.
+        /// </summary>
+        public static string Menu_SynergyStrapper_Cleaner_Title {
+            get {
+                return ResourceManager.GetString("Menu.SynergyStrapper.Cleaner.Title", resourceCulture);
+            }
+        }
+
         public static string Menu_SynergyStrapper_ExportData_Description {
             get {
                 return ResourceManager.GetString("Menu.SynergyStrapper.ExportData.Description", resourceCulture);

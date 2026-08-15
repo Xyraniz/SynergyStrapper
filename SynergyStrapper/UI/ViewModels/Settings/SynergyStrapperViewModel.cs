@@ -3,6 +3,7 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using ICSharpCode.SharpZipLib.Zip;
 using Microsoft.Win32;
+using SynergyStrapper.Integrations;
 
 namespace SynergyStrapper.UI.ViewModels.Settings
 {
@@ -14,6 +15,7 @@ namespace SynergyStrapper.UI.ViewModels.Settings
         public SynergyStrapperViewModel()
         {
             CheckForUpdatesCommand = new AsyncRelayCommand(CheckForUpdatesAsync);
+            CleanOldFilesCommand = new AsyncRelayCommand(CleanOldFilesAsync);
         }
 
         public WebEnvironment[] WebEnvironments => Enum.GetValues<WebEnvironment>();
@@ -72,6 +74,8 @@ namespace SynergyStrapper.UI.ViewModels.Settings
 
         public ICommand ExportDataCommand => new RelayCommand(ExportData);
 
+        public IAsyncRelayCommand CleanOldFilesCommand { get; }
+
         public IAsyncRelayCommand CheckForUpdatesCommand { get; }
 
         private async Task CheckForUpdatesAsync()
@@ -118,6 +122,28 @@ namespace SynergyStrapper.UI.ViewModels.Settings
             finally
             {
                 IsCheckingForUpdates = false;
+            }
+        }
+
+        private async Task CleanOldFilesAsync()
+        {
+            const string LOG_IDENT = "SynergyStrapperViewModel::CleanOldFilesAsync";
+
+            try
+            {
+                CleanerResult result = await Task.Run(Cleaner.CleanOldFiles);
+                Frontend.ShowMessageBox(
+                    string.Format(
+                        Strings.Menu_SynergyStrapper_Cleaner_Result,
+                        result.DeletedFiles,
+                        result.FailedFiles,
+                        result.SkippedFiles),
+                    MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                App.Logger.WriteException(LOG_IDENT, ex);
+                Frontend.ShowMessageBox(Strings.Menu_SynergyStrapper_Cleaner_Error, MessageBoxImage.Error);
             }
         }
 

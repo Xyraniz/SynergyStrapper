@@ -36,6 +36,23 @@
             </StackPanel>
         </ui:CardExpander>
 
+        <ui:CardExpander Margin="0,8,0,0" IsExpanded="True">
+            <ui:CardExpander.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock FontSize="14" Text="{x:Static resources:Strings.Menu_SynergyStrapper_Cleaner_Title}" />
+                        <TextBlock FontSize="12" Text="{x:Static resources:Strings.Menu_SynergyStrapper_Cleaner_Description}" Foreground="{DynamicResource TextFillColorTertiaryBrush}" TextWrapping="Wrap" />
+                    </StackPanel>
+                    <ui:Button Grid.Column="1" MinWidth="100" Margin="0,0,16,0" Icon="Delete16" Content="{x:Static resources:Strings.Menu_SynergyStrapper_Cleaner_Button}" Command="{Binding CleanOldFilesCommand}" />
+                </Grid>
+            </ui:CardExpander.Header>
+            <TextBlock Text="{x:Static resources:Strings.Menu_SynergyStrapper_Cleaner_Note}" TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+        </ui:CardExpander>
+
         <controls:OptionControl 
             Header="{x:Static resources:Strings.Menu_SynergyStrapper_Analytics_Title}"
             Description="{Binding Source={x:Static resources:Strings.Menu_SynergyStrapper_Analytics_Description}, Converter={StaticResource StringFormatConverter}, ConverterParameter='https://github.com/Xyraniz/SynergyStrapper/wiki/info/privacy-policy/'}">

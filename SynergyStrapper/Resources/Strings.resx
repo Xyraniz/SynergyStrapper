@@ -1416,4 +1416,22 @@ Defaulting to {1}.</value>
   <data name="Menu.SynergyStrapper.UpdateStatus.Button" xml:space="preserve">
     <value>Check now</value>
   </data>
+  <data name="Menu.SynergyStrapper.Cleaner.Title" xml:space="preserve">
+    <value>Clean old logs and cache</value>
+  </data>
+  <data name="Menu.SynergyStrapper.Cleaner.Description" xml:space="preserve">
+    <value>Remove files older than 30 days from Synergy Strapper and Roblox cache folders.</value>
+  </data>
+  <data name="Menu.SynergyStrapper.Cleaner.Button" xml:space="preserve">
+    <value>Clean now</value>
+  </data>
+  <data name="Menu.SynergyStrapper.Cleaner.Note" xml:space="preserve">
+    <value>This only scans known cache and log folders. The current log is always kept, and the operation is limited to 200 files per folder.</value>
+  </data>
+  <data name="Menu.SynergyStrapper.Cleaner.Result" xml:space="preserve">
+    <value>Cleanup finished. Deleted: {0}. Could not delete: {1}. Skipped or still recent: {2}.</value>
+  </data>
+  <data name="Menu.SynergyStrapper.Cleaner.Error" xml:space="preserve">
+    <value>The cleanup could not be completed. Your files were left unchanged.</value>
+  </data>
 </root>
