@@ -17,6 +17,10 @@ La documentación de instalación, configuración y diagnóstico está disponibl
 
 Synergy Strapper instala y actualiza Roblox Player y Roblox Studio, ofrece una ventana de configuración, estilos de bootstrapper personalizables, gestión reversible de FastFlags, accesos directos, integraciones opcionales y herramientas de diagnóstico. El proyecto está diseñado para equipos Windows 10 o posteriores.
 
+### Novedades de la versión 1.0.7
+
+La versión 1.0.7 corrige la representación visual del branding de Synergy Strapper en la ventana principal, el menú de lanzamiento y las ventanas auxiliares. Las superficies WPF usan ahora el PNG transparente de alta resolución y los iconos nativos incluyen tamaños múltiples para evitar fondos opacos y pérdida de nitidez.
+
 ### Novedades de la versión 1.0.6
 
 La versión 1.0.6 incorpora un **FastFlag Health Check** dentro del editor. Esta herramienta valida nombres y valores, detecta filtros mal formados, muestra advertencias y enseña el diff de cambios pendientes desde el último guardado antes de que el usuario aplique una configuración.
@@ -38,7 +42,7 @@ dotnet build SynergyStrapper.sln -c Release
 dotnet publish SynergyStrapper/SynergyStrapper.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
 ```
 
-La publicación v1.0.6 es autocontenida: incluye el runtime de .NET Desktop para reducir la posibilidad de que el usuario tenga que instalar dependencias manualmente. El artefacto es más grande y la publicación recomendada debe realizarse en Windows para conservar correctamente los recursos del apphost y firmarse con un certificado controlado por el distribuidor.
+La publicación v1.0.7 es autocontenida: incluye el runtime de .NET Desktop para reducir la posibilidad de que el usuario tenga que instalar dependencias manualmente. El artefacto es más grande y la publicación recomendada debe realizarse en Windows para conservar correctamente los recursos del apphost y firmarse con un certificado controlado por el distribuidor.
 
 ## Atribución y licencias
 

@@ -1,3 +1,9 @@
+## [1.0.7] — Synergy Strapper
+
+### Branding y calidad visual
+
+Se corrigieron los logos mostrados en la ventana principal, el menú de lanzamiento y las ventanas auxiliares. Las interfaces WPF cargan ahora el PNG transparente de alta resolución y los iconos nativos incluyen tamaños múltiples para evitar fondos opacos y pérdida de nitidez.
+
 ## [1.0.6] — Synergy Strapper
 
 ### FastFlag Health Check

@@ -33,7 +33,7 @@
             Grid.Row="0"
             Padding="8"
             ForceShutdown="False"
-            Icon="pack://application:,,,/SynergyStrapper.ico"
+            Icon="pack://application:,,,/Resources/LogoHighRes.png"
             MinimizeToTray="False"
             UseSnapLayout="True" />
 
