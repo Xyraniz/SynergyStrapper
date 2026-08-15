@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Sitio oficial y documentación de Synergy Strapper, un bootstrapper alternativo para Roblox."
+    />
+    <meta name="theme-color" content="#0a0a0b" />
+    <title>Synergy Strapper — Bootstrapper para Roblox</title>
+    <link rel="icon" type="image/png" href="./images/SynergyStrapper.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./assets/css/style.css" />
+  </head>
+  <body class="site-body" data-page="home">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+    <header class="site-header" data-header>
+      <a class="brand" href="./index.html" aria-label="Synergy Strapper, inicio">
+        <img class="brand__mark" src="./images/SynergyStrapper.png" alt="" />
+        <span class="brand__name">SYNERGY <strong>STRAPPER</strong></span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+        <span class="nav-toggle__line"></span>
+        <span class="nav-toggle__line"></span>
+        <span class="sr-only">Abrir navegación</span>
+      </button>
+
+      <nav id="primary-nav" class="site-nav" aria-label="Navegación principal">
+        <a class="site-nav__link is-active" href="./index.html">Inicio</a>
+        <a class="site-nav__link" href="./wiki.html">Wiki</a>
+        <a class="site-nav__link" href="#funciones">Funciones</a>
+        <a class="site-nav__link" href="https://github.com/Xyraniz/SynergyStrapper/releases/latest" target="_blank" rel="noreferrer">Releases <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+
+    <main id="contenido">
+      <section class="hero section-frame" aria-labelledby="hero-title">
+        <div class="hero__ruler" aria-hidden="true">
+          <span>01</span><i></i><span>SYNERGY SYSTEM</span>
+        </div>
+        <div class="hero__copy reveal">
+          <p class="eyebrow">Bootstrapper alternativo para Roblox</p>
+          <h1 id="hero-title">Instala una vez.<br /><em>Mantén el control.</em></h1>
+          <p class="hero__lede">
+            Synergy Strapper reúne instalación, actualización y configuración de Roblox Player y Studio en una experiencia de escritorio clara y configurable.
+          </p>
+          <div class="hero__actions">
+            <a class="button button--primary" href="https://github.com/Xyraniz/SynergyStrapper/releases/latest" target="_blank" rel="noreferrer">
+              Descargar desde Releases <span aria-hidden="true">↓</span>
+            </a>
+            <a class="button button--quiet" href="./wiki.html">Leer la wiki <span aria-hidden="true">→</span></a>
+          </div>
+          <p class="hero__fineprint">Windows 10 o posterior · Distribución oficial en GitHub Releases</p>
+        </div>
+        <div class="hero__visual" aria-hidden="true">
+          <div class="hero__grid"></div>
+          <div class="hero__module hero__module--one"></div>
+          <div class="hero__module hero__module--two"></div>
+          <div class="hero__module hero__module--three"></div>
+          <img class="hero__mark" src="./images/SynergyStrapper.png" alt="" />
+          <p class="hero__coordinate">40.7128° N<br />74.0060° W</p>
+        </div>
+      </section>
+
+      <section class="trust-strip" aria-label="Resumen del proyecto">
+        <div class="trust-strip__item"><span class="trust-strip__value">01</span><span>Repositorio<br />oficial</span></div>
+        <div class="trust-strip__item"><span class="trust-strip__value">WIN</span><span>Cliente de<br />escritorio</span></div>
+        <div class="trust-strip__item"><span class="trust-strip__value">GIT</span><span>Releases<br />verificables</span></div>
+        <div class="trust-strip__item trust-strip__item--statement">Fork independiente, no oficial y no afiliado a Roblox Corporation.</div>
+      </section>
+
+      <section id="funciones" class="capabilities section-frame" aria-labelledby="capabilities-title">
+        <div class="section-kicker reveal">
+          <p class="eyebrow">Capacidades</p>
+          <span class="section-number">02</span>
+        </div>
+        <div class="capabilities__heading reveal">
+          <h2 id="capabilities-title">Un núcleo para<br />la instalación diaria.</h2>
+          <p>Las herramientas están organizadas por tarea para que la configuración siga siendo entendible, reversible y fácil de revisar.</p>
+        </div>
+        <div class="capabilities__list">
+          <article class="capability reveal">
+            <span class="capability__index">A</span>
+            <div>
+              <h3>Instalación y actualizaciones</h3>
+              <p>Instala y actualiza Roblox Player y Studio desde un único bootstrapper, con releases distribuidas directamente desde GitHub.</p>
+            </div>
+            <span class="capability__arrow" aria-hidden="true">↘</span>
+          </article>
+          <article class="capability reveal">
+            <span class="capability__index">B</span>
+            <div>
+              <h3>Configuración a tu medida</h3>
+              <p>Gestiona apariencia, bootstrapper, atajos, integraciones, canales y preferencias globales desde su propia ventana de ajustes.</p>
+            </div>
+            <span class="capability__arrow" aria-hidden="true">↘</span>
+          </article>
+          <article class="capability reveal">
+            <span class="capability__index">C</span>
+            <div>
+              <h3>FastFlags y perfiles</h3>
+              <p>Revisa configuraciones y usa perfiles nombrados para guardar, cargar, fusionar o sustituir los FastFlags de forma explícita.</p>
+            </div>
+            <span class="capability__arrow" aria-hidden="true">↘</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="product-band" aria-labelledby="product-band-title">
+        <div class="product-band__image" role="img" aria-label="Identidad gráfica de Synergy Strapper">
+          <img src="./images/SynergyStrapper-full-dark.png" alt="" />
+        </div>
+        <div class="product-band__copy reveal">
+          <p class="eyebrow">Diseñado para ser legible</p>
+          <h2 id="product-band-title">Configuración sin<br />convertirla en ruido.</h2>
+          <p>El objetivo no es ocultar opciones tras automatismos. Es reunirlas en un sitio predecible, con acciones directas y contexto antes de cada cambio.</p>
+          <a class="text-link" href="./wiki.html#primeros-pasos">Abrir guía de primeros pasos <span aria-hidden="true">→</span></a>
+        </div>
+      </section>
+
+      <section class="wiki-preview section-frame" aria-labelledby="wiki-preview-title">
+        <div class="wiki-preview__intro reveal">
+          <p class="eyebrow">Documentación</p>
+          <h2 id="wiki-preview-title">La wiki que el ejecutable merecía.</h2>
+          <p>Una referencia breve y útil para instalar, actualizar, configurar y resolver dudas sin buscar entre mensajes antiguos.</p>
+          <a class="button button--outline" href="./wiki.html">Explorar la wiki <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="wiki-preview__cards">
+          <a class="wiki-card wiki-card--large reveal" href="./wiki.html#instalacion">
+            <span class="wiki-card__meta">01 · Inicio</span>
+            <h3>Instalación, actualizaciones y comprobaciones.</h3>
+            <span class="wiki-card__arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="wiki-card reveal" href="./wiki.html#fastflags">
+            <span class="wiki-card__meta">02 · Ajustes</span>
+            <h3>FastFlags y perfiles.</h3>
+            <span class="wiki-card__arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="wiki-card reveal" href="./wiki.html#herramientas">
+            <span class="wiki-card__meta">03 · Herramientas</span>
+            <h3>Canales, servidores e historial.</h3>
+            <span class="wiki-card__arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="download-panel section-frame" aria-labelledby="download-title">
+        <div class="download-panel__corner download-panel__corner--top" aria-hidden="true"></div>
+        <div class="download-panel__corner download-panel__corner--bottom" aria-hidden="true"></div>
+        <div class="download-panel__content reveal">
+          <p class="eyebrow">Releases oficiales</p>
+          <h2 id="download-title">Preparado cuando tú lo estés.</h2>
+          <p>Descarga Synergy Strapper únicamente desde los assets publicados en el repositorio oficial de GitHub.</p>
+          <a class="button button--primary" href="https://github.com/Xyraniz/SynergyStrapper/releases/latest" target="_blank" rel="noreferrer">Ir a la última release <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="download-panel__specs" aria-label="Detalles de distribución">
+          <p><span>PLATAFORMA</span>WINDOWS 10+</p>
+          <p><span>ARQUITECTURA</span>WIN-X64</p>
+          <p><span>CANAL</span>GITHUB RELEASES</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__brand">
+        <img src="./images/SynergyStrapper.png" alt="" />
+        <span>SYNERGY STRAPPER</span>
+      </div>
+      <div class="site-footer__links">
+        <a href="./wiki.html">Wiki</a>
+        <a href="https://github.com/Xyraniz/SynergyStrapper" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="https://github.com/Xyraniz/SynergyStrapper/releases/latest" target="_blank" rel="noreferrer">Releases</a>
+      </div>
+      <p class="site-footer__notice">Proyecto independiente. No afiliado a Roblox Corporation.</p>
+    </footer>
+
+    <script src="./assets/js/main.js"></script>
+  </body>
+</html>

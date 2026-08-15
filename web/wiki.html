@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Wiki y guía oficial de Synergy Strapper." />
+    <meta name="theme-color" content="#0a0a0b" />
+    <title>Wiki — Synergy Strapper</title>
+    <link rel="icon" type="image/png" href="./images/SynergyStrapper.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./assets/css/style.css" />
+  </head>
+  <body class="site-body site-body--wiki" data-page="wiki">
+    <a class="skip-link" href="#wiki-content">Saltar al contenido</a>
+
+    <header class="site-header" data-header>
+      <a class="brand" href="./index.html" aria-label="Synergy Strapper, inicio">
+        <img class="brand__mark" src="./images/SynergyStrapper.png" alt="" />
+        <span class="brand__name">SYNERGY <strong>STRAPPER</strong></span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+        <span class="nav-toggle__line"></span>
+        <span class="nav-toggle__line"></span>
+        <span class="sr-only">Abrir navegación</span>
+      </button>
+
+      <nav id="primary-nav" class="site-nav" aria-label="Navegación principal">
+        <a class="site-nav__link" href="./index.html">Inicio</a>
+        <a class="site-nav__link is-active" href="./wiki.html">Wiki</a>
+        <a class="site-nav__link" href="./index.html#funciones">Funciones</a>
+        <a class="site-nav__link" href="https://github.com/Xyraniz/SynergyStrapper/releases/latest" target="_blank" rel="noreferrer">Releases <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+
+    <main id="wiki-content">
+      <section class="wiki-hero section-frame" aria-labelledby="wiki-title">
+        <div class="wiki-hero__copy reveal">
+          <p class="eyebrow">Base de conocimiento</p>
+          <h1 id="wiki-title">Guía de operación.<br /><em>Sin conjeturas.</em></h1>
+          <p>Todo lo necesario para descargar, instalar y utilizar Synergy Strapper, basado en las opciones reales de la aplicación.</p>
+        </div>
+        <div class="wiki-hero__visual" aria-hidden="true">
+          <div class="wiki-hero__orb"></div>
+          <img src="./images/SynergyStrapper.png" alt="" />
+          <span>DOCUMENTATION<br />SYSTEM / 01</span>
+        </div>
+      </section>
+
+      <div class="wiki-layout section-frame">
+        <aside class="wiki-sidebar" aria-label="Índice de la wiki">
+          <p class="wiki-sidebar__label">En esta guía</p>
+          <nav class="wiki-toc">
+            <a href="#primeros-pasos">Primeros pasos</a>
+            <a href="#instalacion">Instalación y actualizaciones</a>
+            <a href="#configuracion">Configuración</a>
+            <a href="#fastflags">FastFlags y perfiles</a>
+            <a href="#herramientas">Herramientas</a>
+            <a href="#migracion">Migración</a>
+            <a href="#privacidad">Privacidad y seguridad</a>
+            <a href="#ayuda">Ayuda y diagnósticos</a>
+          </nav>
+          <div class="wiki-sidebar__source">
+            <span>FUENTE</span>
+            <a href="https://github.com/Xyraniz/SynergyStrapper" target="_blank" rel="noreferrer">Repositorio oficial ↗</a>
+          </div>
+        </aside>
+
+        <article class="wiki-article">
+          <section id="primeros-pasos" class="wiki-section reveal">
+            <p class="eyebrow">01 · Inicio</p>
+            <h2>Primeros pasos</h2>
+            <p class="wiki-intro">Synergy Strapper es un bootstrapper alternativo para Roblox con una interfaz propia. Está pensado para Windows 10 o posterior y se distribuye desde este repositorio.</p>
+            <div class="wiki-callout">
+              <span class="wiki-callout__symbol" aria-hidden="true">i</span>
+              <p><strong>Importante.</strong> Synergy Strapper es un proyecto independiente y no oficial. No está afiliado a Roblox Corporation.</p>
+            </div>
+            <ol class="step-list">
+              <li><span>01</span><p>Abre la <a href="https://github.com/Xyraniz/SynergyStrapper/releases/latest" target="_blank" rel="noreferrer">última release publicada ↗</a>.</p></li>
+              <li><span>02</span><p>Descarga el asset <code>SynergyStrapper.exe</code> asociado a esa release.</p></li>
+              <li><span>03</span><p>Ejecuta el instalador y sigue el flujo de la aplicación para instalar Roblox Player, Studio o ambos.</p></li>
+            </ol>
+          </section>
+
+          <section id="instalacion" class="wiki-section reveal">
+            <p class="eyebrow">02 · Distribución</p>
+            <h2>Instalación y actualizaciones</h2>
+            <p>Las versiones publicadas se entregan como assets de GitHub Releases. El actualizador consulta la release publicada y trabaja con el ejecutable previsto para Synergy Strapper. Si GitHub no responde, no existe una release compatible o no puede comprobarse la integridad del asset, la instalación actual se conserva.</p>
+            <div class="wiki-table-wrap">
+              <table>
+                <thead><tr><th>Qué comprobar</th><th>Acción recomendada</th></tr></thead>
+                <tbody>
+                  <tr><td>Origen de descarga</td><td>Utiliza únicamente el repositorio oficial y sus GitHub Releases.</td></tr>
+                  <tr><td>Archivo esperado</td><td>Busca <code>SynergyStrapper.exe</code> entre los assets publicados.</td></tr>
+                  <tr><td>Integridad</td><td>Cuando esté disponible, conserva y consulta el archivo de suma SHA-256 de la release.</td></tr>
+                  <tr><td>Actualización no disponible</td><td>Abre la página de releases y confirma si existe una versión publicada compatible.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section id="configuracion" class="wiki-section reveal">
+            <p class="eyebrow">03 · Preferencias</p>
+            <h2>Configuración</h2>
+            <p>La ventana de ajustes separa las preferencias por categoría para evitar mezclar cambios visuales con operaciones de instalación o modificación. Los selectores incluyen opciones de apariencia, bootstrapper, atajos, integraciones, mods, canales y ajustes globales de Roblox.</p>
+            <div class="topic-grid">
+              <div class="topic-card"><span>APARIENCIA</span><h3>Aspecto y comportamiento</h3><p>Revisa el tema, idioma, estilos y otros elementos de presentación desde sus páginas específicas.</p></div>
+              <div class="topic-card"><span>AJUSTES GLOBALES</span><h3>Preferencias de Roblox</h3><p>Consulta y modifica los valores guardados en <code>GlobalBasicSettings_13.xml</code> con la aplicación cerrada cuando sea necesario.</p></div>
+              <div class="topic-card"><span>MODS</span><h3>Recursos y restauración</h3><p>Los presets se aplican y restauran con comprobaciones para no borrar archivos externos que no coincidan con recursos conocidos.</p></div>
+            </div>
+          </section>
+
+          <section id="fastflags" class="wiki-section reveal">
+            <p class="eyebrow">04 · Ajustes avanzados</p>
+            <h2>FastFlags y perfiles</h2>
+            <p>El editor permite trabajar con FastFlags y guardar configuraciones como perfiles nombrados. Los perfiles se almacenan en JSON dentro de la instalación para que la configuración pueda recuperarse después sin depender de un servicio remoto.</p>
+            <div class="operation-list">
+              <div><strong>Guardar</strong><span>Conserva la configuración actual con un nombre de perfil.</span></div>
+              <div><strong>Cargar</strong><span>Aplica un perfil sustituyendo la lista actual de flags.</span></div>
+              <div><strong>Fusionar</strong><span>Combina los valores del perfil con los flags existentes.</span></div>
+              <div><strong>Eliminar</strong><span>Borra un perfil guardado que ya no necesites.</span></div>
+            </div>
+            <div class="wiki-callout wiki-callout--quiet">
+              <span class="wiki-callout__symbol" aria-hidden="true">!</span>
+              <p>El perfil de rendimiento está pensado para ser conservador y reversible. No existe una garantía de FPS: el resultado depende de Roblox, del hardware y de la experiencia ejecutada.</p>
+            </div>
+          </section>
+
+          <section id="herramientas" class="wiki-section reveal">
+            <p class="eyebrow">05 · Utilidades</p>
+            <h2>Canales, servidores e historial</h2>
+            <p>Synergy Strapper reúne utilidades de instalación y consulta para que no tengas que cambiar entre varias herramientas mientras administras Roblox.</p>
+            <div class="wiki-table-wrap">
+              <table>
+                <thead><tr><th>Herramienta</th><th>Uso</th></tr></thead>
+                <tbody>
+                  <tr><td>Canales</td><td>Selecciona producción u otro canal compatible para Player y Studio. Los canales de prueba pueden ser menos estables.</td></tr>
+                  <tr><td>Server Browser</td><td>Introduce un Place ID para consultar servidores públicos, ordenar resultados y unirte mediante un deeplink de Roblox.</td></tr>
+                  <tr><td>Recent Games</td><td>Consulta hasta 50 partidas registradas localmente, relanza una entrada o elimina el historial.</td></tr>
+                  <tr><td>Mantenimiento</td><td>La limpieza manual actúa solamente sobre rutas conocidas de logs, descargas y caché, con límites de seguridad.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section id="migracion" class="wiki-section reveal">
+            <p class="eyebrow">06 · Transición</p>
+            <h2>Migración desde otra instalación</h2>
+            <p>Durante la instalación puede detectarse una instalación compatible de Bloxstrap, Fishstrap o Voidstrap. La migración es opcional: copia configuraciones compatibles, temas y modificaciones sin eliminar ni alterar los archivos de origen.</p>
+            <p>Si no se encuentra una instalación previa, continúa con una configuración nueva. Si una fuente antigua presenta un problema, la migración se procesa por archivo para que el resto de la instalación pueda continuar.</p>
+          </section>
+
+          <section id="privacidad" class="wiki-section reveal">
+            <p class="eyebrow">07 · Confianza</p>
+            <h2>Privacidad y seguridad</h2>
+            <div class="privacy-grid">
+              <div><span>NO SE ALMACENA</span><h3>Credenciales de Roblox</h3><p>Las funciones descritas no guardan cookies, tokens ni credenciales de la cuenta.</p></div>
+              <div><span>NO OFICIAL</span><h3>Distribución controlada</h3><p>Evita binarios publicados por terceros; la distribución válida está en este repositorio y sus releases.</p></div>
+              <div><span>REVERSIBLE</span><h3>Cambios de configuración</h3><p>Antes de modificar FastFlags, canales o presets, anota el estado actual y conserva perfiles para volver atrás.</p></div>
+            </div>
+          </section>
+
+          <section id="ayuda" class="wiki-section wiki-section--last reveal">
+            <p class="eyebrow">08 · Diagnóstico</p>
+            <h2>Ayuda y diagnósticos</h2>
+            <p>Si un ajuste no se aplica, vuelve a abrir la categoría correspondiente, confirma el valor seleccionado y guarda los cambios pendientes. Para problemas con una release o la actualización, consulta primero los assets de la versión y el changelog publicado.</p>
+            <div class="help-actions">
+              <a class="button button--outline" href="https://github.com/Xyraniz/SynergyStrapper/issues" target="_blank" rel="noreferrer">Abrir un issue <span aria-hidden="true">↗</span></a>
+              <a class="text-link" href="https://github.com/Xyraniz/SynergyStrapper/blob/main/CHANGELOG.md" target="_blank" rel="noreferrer">Leer el changelog completo <span aria-hidden="true">→</span></a>
+            </div>
+          </section>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__brand"><img src="./images/SynergyStrapper.png" alt="" /><span>SYNERGY STRAPPER</span></div>
+      <div class="site-footer__links"><a href="./index.html">Inicio</a><a href="https://github.com/Xyraniz/SynergyStrapper" target="_blank" rel="noreferrer">GitHub</a><a href="https://github.com/Xyraniz/SynergyStrapper/releases/latest" target="_blank" rel="noreferrer">Releases</a></div>
+      <p class="site-footer__notice">Proyecto independiente. No afiliado a Roblox Corporation.</p>
+    </footer>
+
+    <script src="./assets/js/main.js"></script>
+  </body>
+</html>
