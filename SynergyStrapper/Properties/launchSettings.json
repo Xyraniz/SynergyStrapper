@@ -1,0 +1,35 @@
+{
+  "profiles": {
+    "SynergyStrapper (Launch)": {
+      "commandName": "Project"
+    },
+    "SynergyStrapper (Quiet Launch)": {
+      "commandName": "Project",
+      "commandLineArgs": "-quiet"
+    },
+    "SynergyStrapper (Uninstall)": {
+      "commandName": "Project",
+      "commandLineArgs": "-uninstall"
+    },
+    "SynergyStrapper (Quiet Uninstall)": {
+      "commandName": "Project",
+      "commandLineArgs": "-uninstall -quiet"
+    },
+    "SynergyStrapper (Menu)": {
+      "commandName": "Project",
+      "commandLineArgs": "-menu"
+    },
+    "SynergyStrapper (Deeplink)": {
+      "commandName": "Project",
+      "commandLineArgs": "-player \"roblox://experiences/start?placeId=13700835620\""
+    },
+    "SynergyStrapper (Studio Launch)": {
+      "commandName": "Project",
+      "commandLineArgs": "-studio"
+    },
+    "SynergyStrapper (Watcher)": {
+      "commandName": "Project",
+      "commandLineArgs": "-watcher"
+    }
+  }
+}

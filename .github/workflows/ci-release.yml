@@ -1,0 +1,63 @@
+name: CI (Release)
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*', 'release-test*']
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    outputs:
+      artifact-id: ${{ steps.upload-artifact.outputs.artifact-id }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore SynergyStrapper/SynergyStrapper.csproj
+
+      - name: Build
+        run: dotnet build SynergyStrapper/SynergyStrapper.csproj -c Release --no-restore
+
+      - name: Publish single-file executable
+        run: dotnet publish SynergyStrapper/SynergyStrapper.csproj -p:PublishSingleFile=true -p:CommitHash=${{ github.sha }} -p:CommitRef=${{ github.ref_type }}/${{ github.ref_name }} -r win-x64 -c Release --self-contained false
+
+      - name: Upload artifact
+        id: upload-artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SynergyStrapper-Release-${{ github.sha }}
+          path: SynergyStrapper/bin/Release/net6.0-windows/win-x64/publish/*
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/tags/release-test')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: SynergyStrapper-Release-${{ github.sha }}
+          path: release
+
+      - name: Rename executable
+        run: mv release/SynergyStrapper.exe SynergyStrapper-${{ github.ref_name }}.exe
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          files: SynergyStrapper-${{ github.ref_name }}.exe
+          name: Synergy Strapper ${{ github.ref_name }}
