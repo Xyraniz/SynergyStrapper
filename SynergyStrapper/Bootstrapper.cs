@@ -765,67 +765,74 @@ namespace SynergyStrapper
         private async Task<bool> CheckForUpdates()
         {
             const string LOG_IDENT = "Bootstrapper::CheckForUpdates";
-            
-            // don't update if there's another instance running (likely running in the background)
-            // i don't like this, but there isn't much better way of doing it /shrug
+
+            // Do not update while a second instance is active, because it may be a background updater.
             if (Process.GetProcessesByName(App.ProjectName).Length > 1)
             {
-                App.Logger.WriteLine(LOG_IDENT, $"More than one SynergyStrapper instance running, aborting update check");
+                App.Logger.WriteLine(LOG_IDENT, "More than one SynergyStrapper instance is running; aborting update check.");
                 return false;
             }
 
             App.Logger.WriteLine(LOG_IDENT, "Checking for updates...");
-
-#if !DEBUG_UPDATER
-            var releaseInfo = await App.GetLatestRelease();
-
-            if (releaseInfo is null)
-                return false;
-
-            var versionComparison = Utilities.CompareVersions(App.Version, releaseInfo.TagName);
-
-            // check if we aren't using a deployed build, so we can update to one if a new version comes out
-            if (App.IsProductionBuild && versionComparison == VersionComparison.Equal || versionComparison == VersionComparison.GreaterThan)
-            {
-                App.Logger.WriteLine(LOG_IDENT, "No updates found");
-                return false;
-            }
-
-            if (Dialog is not null)
-                Dialog.CancelEnabled = false;
-
-            string version = releaseInfo.TagName;
-#else
             string version = App.Version;
-#endif
-
-            SetStatus(Strings.Bootstrapper_Status_UpgradingSynergyStrapper);
 
             try
             {
+#if !DEBUG_UPDATER
+                using var updateCheckTimeout = CancellationTokenSource.CreateLinkedTokenSource(_cancelTokenSource.Token);
+                updateCheckTimeout.CancelAfter(TimeSpan.FromSeconds(8));
+
+                var releaseInfo = await App.GetLatestRelease(updateCheckTimeout.Token);
+                if (releaseInfo is null)
+                {
+                    App.Logger.WriteLine(LOG_IDENT, "No published GitHub release was returned.");
+                    return false;
+                }
+
+                if (!GitHubUpdateService.TryGetCompatibleAsset(releaseInfo, out var asset))
+                {
+                    App.Logger.WriteLine(LOG_IDENT, $"Release {releaseInfo.TagName} has no compatible {GitHubUpdateService.ExpectedAssetName} asset.");
+                    return false;
+                }
+
+                bool updateAvailable = await GitHubUpdateService.IsUpdateAvailableAsync(
+                    releaseInfo,
+                    asset,
+                    App.Version,
+                    App.IsProductionBuild,
+                    Paths.Application,
+                    _cancelTokenSource.Token);
+
+                if (!updateAvailable)
+                {
+                    App.Logger.WriteLine(LOG_IDENT, "No updates found.");
+                    return false;
+                }
+
+                version = releaseInfo.TagName;
+#else
+                App.Logger.WriteLine(LOG_IDENT, "DEBUG_UPDATER is enabled; using the current executable as the update source.");
+#endif
+
+                if (Dialog is not null)
+                    Dialog.CancelEnabled = false;
+
+                SetStatus(Strings.Bootstrapper_Status_UpgradingSynergyStrapper);
+
 #if DEBUG_UPDATER
-                string downloadLocation = Path.Combine(Paths.TempUpdates, "SynergyStrapper.exe");
-
+                string downloadLocation = Path.Combine(Paths.TempUpdates, GitHubUpdateService.ExpectedAssetName);
                 Directory.CreateDirectory(Paths.TempUpdates);
-
                 File.Copy(Paths.Process, downloadLocation, true);
 #else
-                var asset = releaseInfo.Assets![0];
-
-                string downloadLocation = Path.Combine(Paths.TempUpdates, asset.Name);
-
-                Directory.CreateDirectory(Paths.TempUpdates);
-
-                App.Logger.WriteLine(LOG_IDENT, $"Downloading {releaseInfo.TagName}...");
-                
-                if (!File.Exists(downloadLocation))
-                {
-                    var response = await App.HttpClient.GetAsync(asset.BrowserDownloadUrl);
-
-                    await using var fileStream = new FileStream(downloadLocation, FileMode.OpenOrCreate, FileAccess.Write);
-                    await response.Content.CopyToAsync(fileStream);
-                }
+                App.Logger.WriteLine(LOG_IDENT, $"Downloading {version}...");
+                string downloadLocation = await GitHubUpdateService.DownloadAsync(
+                    asset,
+                    Paths.TempUpdates,
+                    _cancelTokenSource.Token);
 #endif
+
+                if (!File.Exists(downloadLocation) || new FileInfo(downloadLocation).Length == 0)
+                    throw new InvalidDataException("The update executable was not created correctly.");
 
                 App.Logger.WriteLine(LOG_IDENT, $"Starting {version}...");
 
@@ -847,14 +854,18 @@ namespace SynergyStrapper
                 App.Settings.Save();
 
                 new InterProcessLock("AutoUpdater");
-                
                 Process.Start(startInfo);
 
                 return true;
             }
+            catch (OperationCanceledException)
+            {
+                App.Logger.WriteLine(LOG_IDENT, "Update check was cancelled.");
+                return false;
+            }
             catch (Exception ex)
             {
-                App.Logger.WriteLine(LOG_IDENT, "An exception occurred when running the auto-updater");
+                App.Logger.WriteLine(LOG_IDENT, "An exception occurred while running the auto-updater.");
                 App.Logger.WriteException(LOG_IDENT, ex);
 
                 Frontend.ShowMessageBox(

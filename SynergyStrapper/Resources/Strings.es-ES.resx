@@ -1407,4 +1407,28 @@ Revirtiendo al tema {1}.</value>
   <data name="Menu.FastFlagEditor.AllowlistInformation" xml:space="preserve">
     <value>Debido a la [actualización de la lista de Fast Flags permitidos]({0}), la mayoría de las Fast Flags personalizadas no tendrán efecto en el cliente de Roblox.</value>
   </data>
+  <data name="Menu.SynergyStrapper.Version" xml:space="preserve">
+    <value>Versión instalada: {0}</value>
+  </data>
+  <data name="Menu.SynergyStrapper.UpdateStatus.Ready" xml:space="preserve">
+    <value>Pulsa el botón para buscar una nueva versión.</value>
+  </data>
+  <data name="Menu.SynergyStrapper.UpdateStatus.Checking" xml:space="preserve">
+    <value>Buscando actualizaciones...</value>
+  </data>
+  <data name="Menu.SynergyStrapper.UpdateStatus.Available" xml:space="preserve">
+    <value>La versión {0} está disponible. Se instalará automáticamente la próxima vez que se inicie Roblox.</value>
+  </data>
+  <data name="Menu.SynergyStrapper.UpdateStatus.Current" xml:space="preserve">
+    <value>Estás usando la versión más reciente.</value>
+  </data>
+  <data name="Menu.SynergyStrapper.UpdateStatus.Unavailable" xml:space="preserve">
+    <value>No hay ninguna release publicada disponible en este momento.</value>
+  </data>
+  <data name="Menu.SynergyStrapper.UpdateStatus.Error" xml:space="preserve">
+    <value>No se pudieron buscar actualizaciones. Tu instalación actual no se ha modificado.</value>
+  </data>
+  <data name="Menu.SynergyStrapper.UpdateStatus.Button" xml:space="preserve">
+    <value>Buscar ahora</value>
+  </data>
 </root>

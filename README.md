@@ -41,3 +41,17 @@ Synergy Strapper no está afiliado a Roblox Corporation ni pretende ser una herr
 ## Estado del proyecto
 
 El código se mantiene como un fork independiente. Los cambios de rendimiento se aplican de forma conservadora para priorizar estabilidad, reversibilidad y compatibilidad con futuras versiones de Roblox.
+
+## Distribución y actualizaciones
+
+Los ejecutables publicados deben distribuirse como **assets de GitHub Releases**, no como enlaces a archivos arbitrarios ni como binarios descargados desde terceros. El cliente consulta la última release publicada, selecciona exclusivamente el asset `SynergyStrapper.exe`, comprueba su tamaño y valida su SHA-256 antes de relanzar el proceso de actualización.
+
+El workflow `Publish executable release` se ejecuta cuando cambia el `SynergyStrapper.exe` situado en la raíz de `main`. Antes de publicar, verifica que solo haya cambiado un ejecutable permitido, limita su tamaño, calcula el checksum y crea o actualiza la release asociada a la versión declarada en `SynergyStrapper/SynergyStrapper.csproj`. También puede ejecutarse manualmente desde la pestaña **Actions** para republicar un binario controlado.
+
+Para releases construidas desde el código fuente, crea un tag semántico con el formato `vX.Y.Z` y súbelo a GitHub. El workflow de release compilará en Windows, publicará el single-file `win-x64` y adjuntará tanto `SynergyStrapper.exe` como `SynergyStrapper.exe.sha256` a una release publicada. El tag y la versión de `SynergyStrapper.csproj` deben coincidir.
+
+> El actualizador no fuerza una actualización cuando GitHub no responde, cuando no existe una release publicada compatible o cuando la integridad del asset no se puede comprobar. En esos casos, la instalación actual permanece intacta y el usuario puede abrir la página oficial de releases.
+
+## Rendimiento y compatibilidad
+
+Synergy Strapper no puede garantizar más FPS que el cliente original porque el rendimiento final depende del hardware, la versión de Roblox y la experiencia ejecutada. Por seguridad, el perfil de rendimiento se mantiene reversible y conservador; evita flags no documentadas o cambios que desactiven protecciones del cliente. Las mejoras del bootstrapper se concentran en no duplicar procesos, reutilizar descargas verificadas y evitar trabajo de red o disco innecesario.

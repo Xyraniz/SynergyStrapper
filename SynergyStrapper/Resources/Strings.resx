@@ -1392,4 +1392,28 @@ Defaulting to {1}.</value>
   <data name="Menu.FastFlagEditor.AllowlistInformation" xml:space="preserve">
     <value>Due to the [Fast Flag allowlist update]({0}), most custom Fast Flags will have no effect on the Roblox player.</value>
   </data>
+  <data name="Menu.SynergyStrapper.Version" xml:space="preserve">
+    <value>Installed version: {0}</value>
+  </data>
+  <data name="Menu.SynergyStrapper.UpdateStatus.Ready" xml:space="preserve">
+    <value>Check for a new version using the button below.</value>
+  </data>
+  <data name="Menu.SynergyStrapper.UpdateStatus.Checking" xml:space="preserve">
+    <value>Checking for updates...</value>
+  </data>
+  <data name="Menu.SynergyStrapper.UpdateStatus.Available" xml:space="preserve">
+    <value>Version {0} is available. It will be installed automatically the next time Roblox starts.</value>
+  </data>
+  <data name="Menu.SynergyStrapper.UpdateStatus.Current" xml:space="preserve">
+    <value>You are using the latest version.</value>
+  </data>
+  <data name="Menu.SynergyStrapper.UpdateStatus.Unavailable" xml:space="preserve">
+    <value>No published release is available right now.</value>
+  </data>
+  <data name="Menu.SynergyStrapper.UpdateStatus.Error" xml:space="preserve">
+    <value>Could not check for updates. Your current installation was not changed.</value>
+  </data>
+  <data name="Menu.SynergyStrapper.UpdateStatus.Button" xml:space="preserve">
+    <value>Check now</value>
+  </data>
 </root>

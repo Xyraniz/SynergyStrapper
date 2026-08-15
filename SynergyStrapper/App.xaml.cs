@@ -163,13 +163,15 @@ namespace SynergyStrapper
             return true;
         }
 
-        public static async Task<GithubRelease?> GetLatestRelease()
+        public static async Task<GithubRelease?> GetLatestRelease(CancellationToken cancellationToken = default)
         {
             const string LOG_IDENT = "App::GetLatestRelease";
 
             try
             {
-                var releaseInfo = await Http.GetJson<GithubRelease>($"https://api.github.com/repos/{ProjectRepository}/releases/latest");
+                var releaseInfo = await Http.GetJson<GithubRelease>(
+                    $"https://api.github.com/repos/{ProjectRepository}/releases/latest",
+                    cancellationToken);
 
                 if (releaseInfo is null || releaseInfo.Assets is null)
                 {
@@ -178,6 +180,10 @@ namespace SynergyStrapper
                 }
 
                 return releaseInfo;
+            }
+            catch (OperationCanceledException)
+            {
+                Logger.WriteLine(LOG_IDENT, "The GitHub release request was cancelled.");
             }
             catch (Exception ex)
             {

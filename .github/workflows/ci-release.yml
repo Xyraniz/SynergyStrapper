@@ -52,12 +52,22 @@ jobs:
           name: SynergyStrapper-Release-${{ github.sha }}
           path: release
 
-      - name: Rename executable
-        run: mv release/SynergyStrapper.exe SynergyStrapper-${{ github.ref_name }}.exe
+      - name: Prepare release assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s release/SynergyStrapper.exe
+          mv release/SynergyStrapper.exe SynergyStrapper.exe
+          sha256sum SynergyStrapper.exe > SynergyStrapper.exe.sha256
 
-      - name: Create GitHub release
+      - name: Create published GitHub release
         uses: softprops/action-gh-release@v2
         with:
-          draft: true
-          files: SynergyStrapper-${{ github.ref_name }}.exe
+          draft: false
+          prerelease: ${{ startsWith(github.ref_name, 'release-test') }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          files: |
+            SynergyStrapper.exe
+            SynergyStrapper.exe.sha256
           name: Synergy Strapper ${{ github.ref_name }}

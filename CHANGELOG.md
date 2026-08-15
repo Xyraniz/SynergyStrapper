@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.1] — Synergy Strapper
+
+### Actualización y distribución
+
+Se reforzó el autoactualizador para consultar releases publicadas, seleccionar exclusivamente `SynergyStrapper.exe`, aplicar un límite de tiempo al chequeo inicial y conservar la instalación actual cuando la red o el release no son válidos. Las descargas se escriben en un archivo temporal, se validan por tamaño y SHA-256 y se reemplazan de forma atómica antes del relanzamiento.
+
+Se añadió un workflow que detecta cambios en el ejecutable de la raíz, valida el archivo y lo publica junto con su checksum como asset de GitHub Release. Las releases generadas desde tags `vX.Y.Z` ahora quedan publicadas con el mismo contrato de assets que espera el cliente.
+
+### Interfaz y compatibilidad
+
+La página de configuración muestra la versión instalada, el estado de actualización y una acción manual para comprobar releases. El perfil de rendimiento sigue siendo conservador, reversible y orientado a reducir trabajo de GPU/VRAM sin prometer FPS concretos ni alterar protecciones del cliente.
+
 ## [1.0.0] — Synergy Strapper
 
 ### Identidad y distribución

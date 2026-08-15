@@ -8,6 +8,14 @@ namespace SynergyStrapper.UI.ViewModels.Settings
 {
     public class SynergyStrapperViewModel : NotifyPropertyChangedViewModel
     {
+        private bool _isCheckingForUpdates;
+        private string _updateStatusText = Strings.Menu_SynergyStrapper_UpdateStatus_Ready;
+
+        public SynergyStrapperViewModel()
+        {
+            CheckForUpdatesCommand = new AsyncRelayCommand(CheckForUpdatesAsync);
+        }
+
         public WebEnvironment[] WebEnvironments => Enum.GetValues<WebEnvironment>();
 
         public bool UpdateCheckingEnabled
@@ -30,20 +38,97 @@ namespace SynergyStrapper.UI.ViewModels.Settings
 
         public Visibility WebEnvironmentVisibility => App.Settings.Prop.DeveloperMode ? Visibility.Visible : Visibility.Collapsed;
 
+        public string InstalledVersionText => string.Format(Strings.Menu_SynergyStrapper_Version, App.Version);
+
+        public string UpdateStatusText
+        {
+            get => _updateStatusText;
+            private set
+            {
+                if (_updateStatusText == value)
+                    return;
+
+                _updateStatusText = value;
+                OnPropertyChanged(nameof(UpdateStatusText));
+            }
+        }
+
+        public bool IsCheckingForUpdates
+        {
+            get => _isCheckingForUpdates;
+            private set
+            {
+                if (_isCheckingForUpdates == value)
+                    return;
+
+                _isCheckingForUpdates = value;
+                OnPropertyChanged(nameof(IsCheckingForUpdates));
+            }
+        }
+
         public bool ShouldExportConfig { get; set; } = true;
 
         public bool ShouldExportLogs { get; set; } = true;
 
         public ICommand ExportDataCommand => new RelayCommand(ExportData);
 
+        public IAsyncRelayCommand CheckForUpdatesCommand { get; }
+
+        private async Task CheckForUpdatesAsync()
+        {
+            if (IsCheckingForUpdates)
+                return;
+
+            IsCheckingForUpdates = true;
+            UpdateStatusText = Strings.Menu_SynergyStrapper_UpdateStatus_Checking;
+
+            try
+            {
+                var release = await App.GetLatestRelease();
+                if (release is null)
+                {
+                    UpdateStatusText = Strings.Menu_SynergyStrapper_UpdateStatus_Unavailable;
+                    return;
+                }
+
+                if (!GitHubUpdateService.TryGetCompatibleAsset(release, out var asset))
+                {
+                    UpdateStatusText = Strings.Menu_SynergyStrapper_UpdateStatus_Unavailable;
+                    return;
+                }
+
+                bool updateAvailable = await GitHubUpdateService.IsUpdateAvailableAsync(
+                    release,
+                    asset,
+                    App.Version,
+                    App.IsProductionBuild,
+                    Paths.Application);
+
+                UpdateStatusText = updateAvailable
+                    ? string.Format(
+                        Strings.Menu_SynergyStrapper_UpdateStatus_Available,
+                        release.TagName.TrimStart('v', 'V'))
+                    : Strings.Menu_SynergyStrapper_UpdateStatus_Current;
+            }
+            catch (Exception ex)
+            {
+                App.Logger.WriteException("SynergyStrapperViewModel::CheckForUpdatesAsync", ex);
+                UpdateStatusText = Strings.Menu_SynergyStrapper_UpdateStatus_Error;
+            }
+            finally
+            {
+                IsCheckingForUpdates = false;
+            }
+        }
+
         private void ExportData()
         {
             string timestamp = DateTime.UtcNow.ToString("yyyyMMdd'T'HHmmss'Z'");
 
-            var dialog = new SaveFileDialog 
-            { 
+            var dialog = new SaveFileDialog
+            {
                 FileName = $"SynergyStrapper-export-{timestamp}.zip",
-                Filter = $"{Strings.FileTypes_ZipArchive}|*.zip" 
+                Filter = $"{Strings.FileTypes_ZipArchive}|*.zip"
             };
 
             if (dialog.ShowDialog() != true)
@@ -99,7 +184,6 @@ namespace SynergyStrapper.UI.ViewModels.Settings
                     entry.DateTime = DateTime.Now;
 
                     zipStream.PutNextEntry(entry);
-
                     fileStream.CopyTo(zipStream);
                 }
                 catch (IOException ex)

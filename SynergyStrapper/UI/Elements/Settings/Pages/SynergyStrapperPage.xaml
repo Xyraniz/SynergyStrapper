@@ -23,6 +23,19 @@
             <ui:ToggleSwitch IsChecked="{Binding UpdateCheckingEnabled, Mode=TwoWay}" />
         </controls:OptionControl>
 
+        <ui:CardExpander Margin="0,8,0,0" IsExpanded="True">
+            <ui:CardExpander.Header>
+                <StackPanel>
+                    <TextBlock FontSize="14" Text="{Binding InstalledVersionText}" />
+                    <TextBlock FontSize="12" Text="{Binding UpdateStatusText}" Foreground="{DynamicResource TextFillColorTertiaryBrush}" TextWrapping="Wrap" />
+                </StackPanel>
+            </ui:CardExpander.Header>
+            <StackPanel>
+                <TextBlock Margin="0,0,0,10" Text="{Binding UpdateStatusText}" TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                <ui:Button MinWidth="120" HorizontalAlignment="Left" Icon="ArrowSync20" Content="{x:Static resources:Strings.Menu_SynergyStrapper_UpdateStatus_Button}" Command="{Binding CheckForUpdatesCommand}" />
+            </StackPanel>
+        </ui:CardExpander>
+
         <controls:OptionControl 
             Header="{x:Static resources:Strings.Menu_SynergyStrapper_Analytics_Title}"
             Description="{Binding Source={x:Static resources:Strings.Menu_SynergyStrapper_Analytics_Description}, Converter={StaticResource StringFormatConverter}, ConverterParameter='https://github.com/Xyraniz/SynergyStrapper/wiki/info/privacy-policy/'}">

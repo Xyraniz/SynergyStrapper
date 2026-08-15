@@ -1,0 +1,122 @@
+name: Publish executable release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.exe'
+  workflow_dispatch:
+    inputs:
+      executable:
+        description: 'Executable path to publish'
+        required: false
+        default: 'SynergyStrapper.exe'
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-executable-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish validated executable
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect executable
+        id: executable
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE_SHA: ${{ github.event.before }}
+          CURRENT_SHA: ${{ github.sha }}
+          MANUAL_EXECUTABLE: ${{ inputs.executable }}
+        run: |
+          set -euo pipefail
+
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            executable="$MANUAL_EXECUTABLE"
+          else
+            mapfile -t changed_executables < <(git diff --name-only "$BEFORE_SHA" "$CURRENT_SHA" -- '**.exe' | sed '/^$/d')
+            if [[ "${#changed_executables[@]}" -ne 1 ]]; then
+              echo "Expected exactly one changed executable, found ${#changed_executables[@]}." >&2
+              printf '%s\n' "${changed_executables[@]}" >&2
+              exit 1
+            fi
+            executable="${changed_executables[0]}"
+          fi
+
+          if [[ "$(basename "$executable")" != 'SynergyStrapper.exe' || "$executable" != 'SynergyStrapper.exe' ]]; then
+            echo "Only the repository-root SynergyStrapper.exe is an allowed release input." >&2
+            exit 1
+          fi
+
+          if [[ ! -f "$executable" ]]; then
+            echo "Executable not found: $executable" >&2
+            exit 1
+          fi
+
+          size=$(stat -c '%s' "$executable")
+          if [[ "$size" -le 0 || "$size" -gt $((250 * 1024 * 1024)) ]]; then
+            echo "Executable size is outside the supported range: $size bytes." >&2
+            exit 1
+          fi
+
+          echo "path=$executable" >> "$GITHUB_OUTPUT"
+          echo "size=$size" >> "$GITHUB_OUTPUT"
+          sha256sum "$executable" | awk '{print $1}' > executable.sha256
+          echo "sha256=$(cat executable.sha256)" >> "$GITHUB_OUTPUT"
+
+      - name: Read application version
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          version=$(sed -n 's:.*<Version>\([^<]*\)</Version>.*:\1:p' SynergyStrapper/SynergyStrapper.csproj | head -n 1)
+          if [[ -z "$version" || ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
+            echo "Invalid application version in SynergyStrapper.csproj: '$version'" >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=v$version" >> "$GITHUB_OUTPUT"
+
+      - name: Create release if needed
+        shell: bash
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          set -euo pipefail
+          if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release create "$TAG" \
+              --repo "$GITHUB_REPOSITORY" \
+              --target "$GITHUB_SHA" \
+              --title "Synergy Strapper $TAG" \
+              --generate-notes
+          else
+            gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --draft=false
+          fi
+
+      - name: Upload executable and checksum
+        shell: bash
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+          EXECUTABLE: ${{ steps.executable.outputs.path }}
+          SHA256: ${{ steps.executable.outputs.sha256 }}
+        run: |
+          set -euo pipefail
+          printf '%s  %s\n' "$SHA256" 'SynergyStrapper.exe' > SynergyStrapper.exe.sha256
+          gh release upload "$TAG" \
+            "$EXECUTABLE#SynergyStrapper.exe" \
+            "SynergyStrapper.exe.sha256#SynergyStrapper.exe.sha256" \
+            --repo "$GITHUB_REPOSITORY" \
+            --clobber

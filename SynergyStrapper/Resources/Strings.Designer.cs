@@ -3628,5 +3628,69 @@ namespace SynergyStrapper.Resources {
                 return ResourceManager.GetString("Uninstaller.Uninstall", resourceCulture);
             }
         }
+        /// <summary>
+        ///   Looks up a localized string similar to Installed version: {0}.
+        /// </summary>
+        public static string Menu_SynergyStrapper_Version {
+            get {
+                return ResourceManager.GetString("Menu.SynergyStrapper.Version", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Check for a new version using the button below..
+        /// </summary>
+        public static string Menu_SynergyStrapper_UpdateStatus_Ready {
+            get {
+                return ResourceManager.GetString("Menu.SynergyStrapper.UpdateStatus.Ready", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Checking for updates....
+        /// </summary>
+        public static string Menu_SynergyStrapper_UpdateStatus_Checking {
+            get {
+                return ResourceManager.GetString("Menu.SynergyStrapper.UpdateStatus.Checking", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Version {0} is available. It will be installed automatically the next time Roblox starts..
+        /// </summary>
+        public static string Menu_SynergyStrapper_UpdateStatus_Available {
+            get {
+                return ResourceManager.GetString("Menu.SynergyStrapper.UpdateStatus.Available", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to You are using the latest version..
+        /// </summary>
+        public static string Menu_SynergyStrapper_UpdateStatus_Current {
+            get {
+                return ResourceManager.GetString("Menu.SynergyStrapper.UpdateStatus.Current", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to No published release is available right now..
+        /// </summary>
+        public static string Menu_SynergyStrapper_UpdateStatus_Unavailable {
+            get {
+                return ResourceManager.GetString("Menu.SynergyStrapper.UpdateStatus.Unavailable", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Could not check for updates. Your current installation was not changed..
+        /// </summary>
+        public static string Menu_SynergyStrapper_UpdateStatus_Error {
+            get {
+                return ResourceManager.GetString("Menu.SynergyStrapper.UpdateStatus.Error", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Check now.
+        /// </summary>
+        public static string Menu_SynergyStrapper_UpdateStatus_Button {
+            get {
+                return ResourceManager.GetString("Menu.SynergyStrapper.UpdateStatus.Button", resourceCulture);
+            }
+        }
     }
 }
