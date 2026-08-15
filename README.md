@@ -46,9 +46,9 @@ El código se mantiene como un fork independiente. Los cambios de rendimiento se
 
 Los ejecutables publicados deben distribuirse como **assets de GitHub Releases**, no como enlaces a archivos arbitrarios ni como binarios descargados desde terceros. El cliente consulta la última release publicada, selecciona exclusivamente el asset `SynergyStrapper.exe`, comprueba su tamaño y valida su SHA-256 antes de relanzar el proceso de actualización.
 
-El workflow `Publish executable release` se ejecuta cuando cambia el `SynergyStrapper.exe` situado en la raíz de `main`. Antes de publicar, verifica que solo haya cambiado un ejecutable permitido, limita su tamaño, calcula el checksum y crea o actualiza la release asociada a la versión declarada en `SynergyStrapper/SynergyStrapper.csproj`. También puede ejecutarse manualmente desde la pestaña **Actions** para republicar un binario controlado.
+El workflow `CI (Release)` compila siempre desde el código fuente en un runner Windows. Para una release normal, crea un tag semántico con el formato `vX.Y.Z` y súbelo a GitHub; el workflow compilará el single-file `win-x64` y adjuntará `SynergyStrapper.exe` junto con `SynergyStrapper.exe.sha256` a una release publicada. El tag y la versión de `SynergyStrapper/SynergyStrapper.csproj` deben coincidir.
 
-Para releases construidas desde el código fuente, crea un tag semántico con el formato `vX.Y.Z` y súbelo a GitHub. El workflow de release compilará en Windows, publicará el single-file `win-x64` y adjuntará tanto `SynergyStrapper.exe` como `SynergyStrapper.exe.sha256` a una release publicada. El tag y la versión de `SynergyStrapper.csproj` deben coincidir.
+El mismo workflow se puede ejecutar manualmente desde **Actions → CI (Release)**. El parámetro `release_tag` permite crear o reemplazar una release existente, y `source_ref` indica la rama o commit que se debe compilar. Esta modalidad se utiliza para corregir o regenerar los assets de una release ya publicada, por ejemplo `v1.0.1`, sin crear una nueva versión. El repositorio ya no necesita almacenar un `.exe` en la raíz.
 
 > El actualizador no fuerza una actualización cuando GitHub no responde, cuando no existe una release publicada compatible o cuando la integridad del asset no se puede comprobar. En esos casos, la instalación actual permanece intacta y el usuario puede abrir la página oficial de releases.
 

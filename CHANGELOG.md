@@ -6,7 +6,7 @@
 
 Se reforzó el autoactualizador para consultar releases publicadas, seleccionar exclusivamente `SynergyStrapper.exe`, aplicar un límite de tiempo al chequeo inicial y conservar la instalación actual cuando la red o el release no son válidos. Las descargas se escriben en un archivo temporal, se validan por tamaño y SHA-256 y se reemplazan de forma atómica antes del relanzamiento.
 
-Se añadió un workflow que detecta cambios en el ejecutable de la raíz, valida el archivo y lo publica junto con su checksum como asset de GitHub Release. Las releases generadas desde tags `vX.Y.Z` ahora quedan publicadas con el mismo contrato de assets que espera el cliente.
+El workflow de release compila desde el código fuente en Windows y publica el ejecutable junto con su checksum como asset de GitHub Release. También puede regenerar los assets de una release existente mediante `workflow_dispatch`, por lo que la distribución no depende de mantener un `.exe` en la raíz del repositorio. Las releases generadas desde tags `vX.Y.Z` conservan el mismo contrato de assets que espera el cliente.
 
 ### Interfaz y compatibilidad
 
