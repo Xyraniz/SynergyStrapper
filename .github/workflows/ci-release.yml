@@ -61,7 +61,7 @@ jobs:
           sha256sum SynergyStrapper.exe > SynergyStrapper.exe.sha256
 
       - name: Create published GitHub release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           draft: false
           prerelease: ${{ startsWith(github.ref_name, 'release-test') }}
