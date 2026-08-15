@@ -74,5 +74,12 @@
             Header="{x:Static resources:Strings.Menu_SynergyStrapper_Analytics_Title}">
             <ui:ToggleSwitch IsChecked="{Binding AnalyticsEnabled, Mode=TwoWay}" />
         </controls:OptionControl>
+
+        <TextBlock FontSize="20" FontWeight="SemiBold" Text="Import previous launcher settings" TextWrapping="Wrap" Margin="0,16,0,0" />
+        <TextBlock FontSize="14" Text="Keep compatible themes, modifications and settings when moving from Bloxstrap, Fishstrap or Voidstrap. The source installation is never deleted." TextWrapping="Wrap" />
+        <controls:OptionControl Header="Import settings" Description="{Binding ImportSourceName, StringFormat=Detected: {0}}" Visibility="{Binding ImportSettingsVisibility, Mode=OneWay}">
+            <ui:ToggleSwitch IsChecked="{Binding ImportSettings, Mode=TwoWay}" />
+        </controls:OptionControl>
+        <ui:InfoBar Margin="0,8,0,0" Title="No previous launcher detected" Message="If you want to import settings, install or select the previous launcher before continuing." Severity="Warning" IsClosable="False" IsOpen="{Binding ImportNotFoundVisibility, Mode=OneWay}" />
     </StackPanel>
 </ui:UiPage>

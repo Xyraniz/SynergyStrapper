@@ -37,6 +37,17 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
         public FastFlagEditorPage()
         {
             InitializeComponent();
+            RefreshProfiles();
+        }
+
+        private void RefreshProfiles()
+        {
+            ProfileComboBox.Items.Clear();
+            foreach (string name in App.FastFlags.GetBackupNames())
+                ProfileComboBox.Items.Add(name);
+
+            if (ProfileComboBox.Items.Count > 0)
+                ProfileComboBox.SelectedIndex = 0;
         }
 
         private void ReloadList()
@@ -393,6 +404,64 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
             string json = JsonSerializer.Serialize(App.FastFlags.Prop, new JsonSerializerOptions { WriteIndented = true });
             Clipboard.SetDataObject(json);
             Frontend.ShowMessageBox(Strings.Menu_FastFlagEditor_JsonCopiedToClipboard, MessageBoxImage.Information);
+        }
+
+        private void SaveProfileButton_Click(object sender, RoutedEventArgs e)
+        {
+            string name = Microsoft.VisualBasic.Interaction.InputBox("Enter a profile name:", "Save FastFlag profile", "My profile").Trim();
+            if (String.IsNullOrWhiteSpace(name))
+                return;
+
+            if (!App.FastFlags.SaveBackup(name))
+            {
+                Frontend.ShowMessageBox("The profile could not be saved. Use a name of up to 64 characters without path separators.", MessageBoxImage.Warning);
+                return;
+            }
+
+            RefreshProfiles();
+            ProfileComboBox.SelectedItem = name;
+            Frontend.ShowMessageBox($"Profile '{name}' saved.", MessageBoxImage.Information);
+        }
+
+        private void LoadProfileButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (ProfileComboBox.SelectedItem is not string name)
+                return;
+
+            MessageBoxResult result = Frontend.ShowMessageBox(
+                "Replace current FastFlags with this profile? Choose No to merge its values into the current configuration.",
+                MessageBoxImage.Question,
+                MessageBoxButton.YesNoCancel
+            );
+            if (result == MessageBoxResult.Cancel)
+                return;
+
+            bool loaded = App.FastFlags.LoadBackup(name, result == MessageBoxResult.Yes);
+            if (!loaded)
+            {
+                Frontend.ShowMessageBox("The profile could not be loaded.", MessageBoxImage.Error);
+                return;
+            }
+
+            ReloadList();
+            Frontend.ShowMessageBox($"Profile '{name}' loaded.", MessageBoxImage.Information);
+        }
+
+        private void DeleteProfileButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (ProfileComboBox.SelectedItem is not string name)
+                return;
+
+            if (Frontend.ShowMessageBox($"Delete profile '{name}'?", MessageBoxImage.Question, MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                return;
+
+            if (!App.FastFlags.DeleteBackup(name))
+            {
+                Frontend.ShowMessageBox("The profile could not be deleted.", MessageBoxImage.Warning);
+                return;
+            }
+
+            RefreshProfiles();
         }
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)

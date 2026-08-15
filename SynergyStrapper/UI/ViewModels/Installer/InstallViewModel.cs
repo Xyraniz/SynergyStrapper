@@ -25,12 +25,20 @@ namespace SynergyStrapper.UI.ViewModels.Installer
                     OnPropertyChanged(nameof(ErrorMessage));
                 }
 
-                installer.InstallLocation = value;
-                OnPropertyChanged(nameof(DataFoundMessageVisibility));
+            installer.InstallLocation = value;
+            OnPropertyChanged(nameof(DataFoundMessageVisibility));
+            OnPropertyChanged(nameof(ImportSettingsVisibility));
+            OnPropertyChanged(nameof(ImportSourceName));
             }
         }
 
         public Visibility DataFoundMessageVisibility => installer.ExistingDataPresent ? Visibility.Visible : Visibility.Collapsed;
+
+        public Visibility ImportSettingsVisibility => installer.ImportSourceDetected ? Visibility.Visible : Visibility.Collapsed;
+
+        public Visibility ImportNotFoundVisibility => installer.ImportSettings && !installer.ImportSourceDetected ? Visibility.Visible : Visibility.Collapsed;
+
+        public string ImportSourceName => installer.ImportSourceName;
 
         public string ErrorMessage => installer.InstallLocationError;
 
@@ -50,6 +58,16 @@ namespace SynergyStrapper.UI.ViewModels.Installer
         {
             get => installer.EnableAnalytics;
             set => installer.EnableAnalytics = value;
+        }
+
+        public bool ImportSettings
+        {
+            get => installer.ImportSettings;
+            set
+            {
+                installer.ImportSettings = value;
+                OnPropertyChanged(nameof(ImportNotFoundVisibility));
+            }
         }
 
         public ICommand BrowseInstallLocationCommand => new RelayCommand(BrowseInstallLocation);

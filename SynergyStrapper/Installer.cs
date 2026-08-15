@@ -29,9 +29,26 @@ namespace SynergyStrapper
 
         public bool EnableAnalytics = true;
 
+        public bool ImportSettings = false;
+
         public bool IsImplicitInstall = false;
 
         public string InstallLocationError { get; set; } = "";
+
+        public string? ImportSourceDirectory => FindImportSource();
+
+        public string ImportSourceName => ImportSourceDirectory is null
+            ? ""
+            : Path.GetFileName(ImportSourceDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+
+        public bool ImportSourceDetected => ImportSourceDirectory is not null;
+
+        private static readonly string[] FilesForImporting =
+        {
+            "CustomThemes",
+            "Modifications",
+            "Settings.json"
+        };
 
         public void DoInstall()
         {
@@ -102,6 +119,23 @@ namespace SynergyStrapper
             App.State.Load(false);
             App.FastFlags.Load(false);
 
+            if (ImportSettings && ImportSourceDirectory is not null)
+            {
+                try
+                {
+                    ImportSettingsFromPreviousLauncher(ImportSourceDirectory);
+                }
+                catch (Exception ex)
+                {
+                    App.Logger.WriteException("Installer::ImportSettings", ex);
+                    Frontend.ShowMessageBox($"Some settings could not be imported from {ImportSourceName}.{Environment.NewLine}{Environment.NewLine}{ex.Message}", MessageBoxImage.Warning);
+                }
+
+                App.Settings.Load(false);
+                App.State.Load(false);
+                App.FastFlags.Load(false);
+            }
+
             App.Settings.Prop.EnableAnalytics = EnableAnalytics;
 
             App.Settings.Save();
@@ -110,6 +144,54 @@ namespace SynergyStrapper
 
             if (!IsImplicitInstall)
                 App.SendStat("installAction", "install");
+        }
+
+        private string? FindImportSource()
+        {
+            string[] candidates =
+            {
+                Path.Combine(Paths.LocalAppData, "Bloxstrap"),
+                Path.Combine(Paths.LocalAppData, "Fishstrap"),
+                Path.Combine(Paths.LocalAppData, "Voidstrap")
+            };
+
+            return candidates.FirstOrDefault(Directory.Exists);
+        }
+
+        private void ImportSettingsFromPreviousLauncher(string sourceDirectory)
+        {
+            const string LOG_IDENT = "Installer::ImportSettings";
+            if (String.Equals(sourceDirectory.TrimEnd('\\'), InstallLocation.TrimEnd('\\'), StringComparison.OrdinalIgnoreCase))
+                return;
+
+            foreach (string fileName in FilesForImporting)
+            {
+                string source = Path.Combine(sourceDirectory, fileName);
+                if (!Directory.Exists(source) && !File.Exists(source))
+                    continue;
+
+                string destination = Path.Combine(InstallLocation, fileName);
+                if (Directory.Exists(source))
+                {
+                    Directory.CreateDirectory(destination);
+                    foreach (string directory in Directory.GetDirectories(source, "*", SearchOption.AllDirectories))
+                        Directory.CreateDirectory(directory.Replace(source, destination, StringComparison.OrdinalIgnoreCase));
+
+                    foreach (string file in Directory.GetFiles(source, "*", SearchOption.AllDirectories))
+                    {
+                        string target = file.Replace(source, destination, StringComparison.OrdinalIgnoreCase);
+                        Directory.CreateDirectory(Path.GetDirectoryName(target)!);
+                        File.Copy(file, target, true);
+                    }
+                }
+                else
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
+                    File.Copy(source, destination, true);
+                }
+
+                App.Logger.WriteLine(LOG_IDENT, $"Imported {fileName} from {sourceDirectory}.");
+            }
         }
 
         private bool ValidateLocation()

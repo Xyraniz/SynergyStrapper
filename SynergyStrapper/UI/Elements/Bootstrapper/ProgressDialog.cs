@@ -47,7 +47,7 @@ namespace SynergyStrapper.UI.Elements.Bootstrapper
             {
                 this.labelMessage.ForeColor = SystemColors.Window;
                 this.buttonCancel.ForeColor = Color.FromArgb(196, 197, 196);
-                this.buttonCancel.Image = Properties.Resources.DarkCancelButton;
+                this.buttonCancel.BackgroundImage = Properties.Resources.DarkCancelButton;
                 this.panel1.BackColor = Color.FromArgb(35, 37, 39);
                 this.BackColor = Color.FromArgb(25, 27, 29);
             }
@@ -66,11 +66,11 @@ namespace SynergyStrapper.UI.Elements.Bootstrapper
         {
             if (App.Settings.Prop.Theme.GetFinal() == Theme.Dark)
             {
-                this.buttonCancel.Image = Properties.Resources.DarkCancelButtonHover;
+                this.buttonCancel.BackgroundImage = Properties.Resources.DarkCancelButtonHover;
             }
             else
             {
-                this.buttonCancel.Image = Properties.Resources.CancelButtonHover;
+                this.buttonCancel.BackgroundImage = Properties.Resources.CancelButtonHover;
             }
         }
 
@@ -78,11 +78,11 @@ namespace SynergyStrapper.UI.Elements.Bootstrapper
         {
             if (App.Settings.Prop.Theme.GetFinal() == Theme.Dark)
             {
-                this.buttonCancel.Image = Properties.Resources.DarkCancelButton;
+                this.buttonCancel.BackgroundImage = Properties.Resources.DarkCancelButton;
             }
             else
             {
-                this.buttonCancel.Image = Properties.Resources.CancelButton;
+                this.buttonCancel.BackgroundImage = Properties.Resources.CancelButton;
             }
         }
 

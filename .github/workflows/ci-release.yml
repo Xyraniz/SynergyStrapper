@@ -8,9 +8,9 @@ on:
   workflow_dispatch:
     inputs:
       release_tag:
-        description: 'Release tag to create or replace, for example v1.0.1'
+        description: 'Release tag to create or replace, for example v1.0.3'
         required: true
-        default: 'v1.0.1'
+        default: 'v1.0.3'
         type: string
       source_ref:
         description: 'Branch or commit to build'
@@ -48,8 +48,8 @@ jobs:
       - name: Build
         run: dotnet build SynergyStrapper/SynergyStrapper.csproj -c Release --no-restore
 
-      - name: Publish single-file executable
-        run: dotnet publish SynergyStrapper/SynergyStrapper.csproj -p:PublishSingleFile=true -p:CommitHash=${{ github.sha }} -p:CommitRef=${{ github.ref_type }}/${{ github.ref_name }} -r win-x64 -c Release --self-contained false
+      - name: Publish self-contained single-file executable
+        run: dotnet publish SynergyStrapper/SynergyStrapper.csproj -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:CommitHash=${{ github.sha }} -p:CommitRef=${{ github.ref_type }}/${{ github.ref_name }} -r win-x64 -c Release --self-contained true
 
       - name: Upload artifact
         id: upload-artifact

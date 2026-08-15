@@ -57,6 +57,10 @@
                     <ui:NavigationItem Content="{x:Static resources:Strings.Menu_Behaviour_Title}" PageType="{x:Type pages:BehaviourPage}" Icon="PlaySettings20" Tag="bootstrapper" />
                     <ui:NavigationItem Content="{x:Static resources:Strings.Menu_Mods_Title}" PageType="{x:Type pages:ModsPage}" Icon="WrenchScrewdriver20" Tag="mods" />
                     <ui:NavigationItem Content="{x:Static resources:Strings.Menu_FastFlags_Title}" PageType="{x:Type pages:FastFlagsPage}" Icon="Flag24" Tag="fastflags" />
+                    <ui:NavigationItem Content="Global Settings" PageType="{x:Type pages:GlobalSettingsPage}" Icon="GlobeLocation24" Tag="globalsettings" />
+                    <ui:NavigationItem Content="Deployment Channel" PageType="{x:Type pages:ChannelPage}" Icon="CloudArchive24" Tag="channel" />
+                    <ui:NavigationItem Content="Server Browser" PageType="{x:Type pages:ServerBrowserPage}" Icon="Server24" Tag="serverbrowser" />
+                    <ui:NavigationItem Content="Recent Games" PageType="{x:Type pages:HistoryPage}" Icon="History24" Tag="history" />
                     <ui:NavigationItem Content="{x:Static resources:Strings.Menu_Appearance_Title}" PageType="{x:Type pages:AppearancePage}" Icon="PaintBrush24" Tag="appearance" />
                     <ui:NavigationItem Content="{x:Static resources:Strings.Common_Shortcuts}" PageType="{x:Type pages:ShortcutsPage}" Icon="Apps28" Tag="shortcuts" />
 

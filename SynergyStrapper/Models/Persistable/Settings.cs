@@ -20,6 +20,10 @@ namespace SynergyStrapper.Models.Persistable
         public bool EnableAnalytics { get; set; } = false;
         public bool BackgroundUpdatesEnabled { get; set; } = false;
         public bool UsePerformancePreset { get; set; } = true;
+        public string RobloxChannel { get; set; } = SynergyStrapper.RobloxInterfaces.Deployment.DefaultChannel;
+        public string RobloxChannelHash { get; set; } = "";
+        public bool UpdateRoblox { get; set; } = true;
+        public string LastServerPlaceId { get; set; } = "";
         public bool DebugDisableVersionPackageCleanup { get; set; } = false;
         public string? SelectedCustomTheme { get; set; } = null;
         public WebEnvironment WebEnvironment { get; set; } = WebEnvironment.Production;

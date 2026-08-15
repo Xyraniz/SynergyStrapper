@@ -1,0 +1,32 @@
+<ui:UiPage x:Class="SynergyStrapper.UI.Elements.Settings.Pages.ChannelPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      mc:Ignorable="d"
+      Title="Deployment Channel"
+      Scrollable="True">
+    <StackPanel Margin="0,0,14,14">
+        <TextBlock FontSize="20" FontWeight="SemiBold" Text="Roblox deployment channel" />
+        <TextBlock Margin="0,4,0,12" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Text="Choose which Roblox deployment channel Synergy Strapper should use for Player and Studio. Production is recommended for normal use." />
+        <ui:InfoBar x:Name="StatusBar" Margin="0,0,0,12" IsOpen="True" IsClosable="False" Severity="Informational" Title="Channel" Message="Production is the default channel." />
+
+        <TextBlock Text="Channel name" />
+        <TextBlock FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="Use production for stable Roblox. Other names are for testing and may be unavailable." />
+        <TextBox x:Name="ChannelTextBox" Margin="0,4,0,12" />
+
+        <TextBlock Text="Pinned version GUID (optional)" />
+        <TextBlock FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="Leave blank to follow the selected channel. Keep this field blank unless a trusted deployment source supplied the GUID." />
+        <TextBox x:Name="ChannelHashTextBox" Margin="0,4,0,12" />
+
+        <TextBlock Text="Update Roblox automatically" />
+        <TextBlock FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="When enabled, Synergy Strapper keeps Player or Studio current on the selected deployment." />
+        <ui:ToggleSwitch x:Name="UpdateRobloxToggle" Margin="0,4,0,12" HorizontalAlignment="Left" />
+
+        <WrapPanel Margin="0,4,0,0">
+            <ui:Button Margin="0,0,8,0" Content="Reset to production" Click="ResetButton_Click" />
+            <ui:Button Content="Save channel" Icon="Save24" Appearance="Primary" Click="SaveButton_Click" />
+        </WrapPanel>
+    </StackPanel>
+</ui:UiPage>

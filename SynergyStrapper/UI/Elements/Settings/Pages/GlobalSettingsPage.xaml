@@ -1,0 +1,69 @@
+<ui:UiPage x:Class="SynergyStrapper.UI.Elements.Settings.Pages.GlobalSettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      mc:Ignorable="d"
+      Title="Global Settings"
+      Scrollable="True">
+    <StackPanel Margin="0,0,14,14">
+        <TextBlock FontSize="20" FontWeight="SemiBold" Text="Global Roblox Settings" />
+        <TextBlock Margin="0,4,0,12" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Text="Edit preferences stored by Roblox itself. These settings are applied locally and can be changed back at any time." />
+        <ui:InfoBar x:Name="StatusBar" Margin="0,0,0,12" IsOpen="True" IsClosable="False" Severity="Informational" Title="Global Settings" Message="Loading Roblox settings..." />
+
+        <TextBlock FontWeight="SemiBold" Text="Rendering" />
+        <Grid Margin="0,4,0,0">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Margin="0,0,8,8">
+                <TextBlock Text="Framerate cap" />
+                <TextBlock FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="Whole number from 0 to 1000." />
+                <TextBox x:Name="FramerateTextBox" Margin="0,4,0,0" Width="150" HorizontalAlignment="Left" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Margin="8,0,0,8">
+                <TextBlock Text="Saved quality level" />
+                <TextBlock FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="Roblox graphics quality value." />
+                <ComboBox x:Name="QualityComboBox" Margin="0,4,0,0" Width="150" HorizontalAlignment="Left">
+                    <ComboBoxItem Content="Automatic (0)" Tag="0" />
+                    <ComboBoxItem Content="Level 1" Tag="1" /><ComboBoxItem Content="Level 2" Tag="2" /><ComboBoxItem Content="Level 3" Tag="3" /><ComboBoxItem Content="Level 4" Tag="4" /><ComboBoxItem Content="Level 5" Tag="5" /><ComboBoxItem Content="Level 6" Tag="6" /><ComboBoxItem Content="Level 7" Tag="7" /><ComboBoxItem Content="Level 8" Tag="8" /><ComboBoxItem Content="Level 9" Tag="9" /><ComboBoxItem Content="Level 10" Tag="10" />
+                </ComboBox>
+            </StackPanel>
+        </Grid>
+
+        <TextBlock FontWeight="SemiBold" Margin="0,8,0,0" Text="Input and accessibility" />
+        <Grid Margin="0,4,0,0">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Margin="0,0,8,8">
+                <TextBlock Text="Mouse sensitivity" />
+                <TextBlock FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="Number from 0 to 100." />
+                <TextBox x:Name="SensitivityTextBox" Margin="0,4,0,0" Width="150" HorizontalAlignment="Left" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Margin="8,0,0,8">
+                <TextBlock Text="Preferred text size" />
+                <TextBlock FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="Scale saved by Roblox." />
+                <ComboBox x:Name="FontSizeComboBox" Margin="0,4,0,0" Width="150" HorizontalAlignment="Left">
+                    <ComboBoxItem Content="100%" Tag="1" /><ComboBoxItem Content="125%" Tag="2" /><ComboBoxItem Content="150%" Tag="3" /><ComboBoxItem Content="200%" Tag="4" />
+                </ComboBox>
+            </StackPanel>
+        </Grid>
+
+        <Grid Margin="0,4,0,0">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Margin="0,0,8,8">
+                <TextBlock Text="Reduced motion" />
+                <TextBlock FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="Reduce interface movement where supported." />
+                <ui:ToggleSwitch x:Name="ReducedMotionToggle" Margin="0,4,0,0" HorizontalAlignment="Left" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Margin="8,0,0,8">
+                <TextBlock Text="VR enabled" />
+                <TextBlock FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="Roblox's stored VR preference." />
+                <ui:ToggleSwitch x:Name="VREnabledToggle" Margin="0,4,0,0" HorizontalAlignment="Left" />
+            </StackPanel>
+        </Grid>
+
+        <WrapPanel Margin="0,12,0,0">
+            <ui:Button Margin="0,0,8,0" Content="Reload" Icon="ArrowClockwise24" Click="ReloadButton_Click" />
+            <ui:Button Content="Save Global Settings" Icon="Save24" Appearance="Primary" Click="SaveButton_Click" />
+        </WrapPanel>
+    </StackPanel>
+</ui:UiPage>

@@ -279,6 +279,7 @@ namespace SynergyStrapper.Integrations
 
                     Data.TimeLeft = DateTime.Now;
                     History.Insert(0, Data);
+                    PlayHistoryManager.Record(Data);
 
                     InGame = false;
                     Data = new();

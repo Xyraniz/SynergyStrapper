@@ -1,5 +1,35 @@
 # Changelog
 
+## [1.0.3] — Synergy Strapper
+
+### Experiencia de usuario y configuración
+
+Se incorporó un editor de **Global Roblox Settings** para las preferencias que Roblox guarda en `GlobalBasicSettings_13.xml`. Permite revisar y modificar el límite de FPS, el nivel de calidad guardado, la sensibilidad del ratón, el tamaño de texto, el movimiento reducido y la preferencia de VR. La escritura conserva el atributo de solo lectura del archivo y muestra un error claro si Roblox mantiene el archivo bloqueado; el usuario puede recargar los valores sin reiniciar Synergy Strapper.
+
+Se añadió un gestor de **canales de despliegue** para Player y Studio. El usuario puede seleccionar producción u otro canal compatible, restaurar producción con un clic y guardar la preferencia de actualización. El canal se escribe en las claves de registro que el bootstrapper ya consulta, por lo que no es una opción visual aislada. Los nombres se validan antes de tocar el registro y las opciones de prueba muestran una advertencia de estabilidad.
+
+Se añadió un **navegador de servidores públicos**. El usuario introduce un Place ID, consulta servidores públicos, ordena por menor ping, menor ocupación o mayor ocupación, limita los resultados visibles y se une mediante un deeplink `roblox://`. La vista incluye copia del ID de servidor, doble clic para unirse, cancelación de peticiones y espera progresiva cuando Roblox responde con rate limit. No usa cookies, tokens ni credenciales de la cuenta.
+
+El historial de partidas dejó de depender únicamente de la sesión actual. Ahora se registran localmente hasta 50 partidas terminadas, con nombre del juego cuando Roblox lo proporciona, Place ID, servidor, fecha y número de veces jugado. La nueva página **Recent Games** permite relanzar una entrada, abrir el mismo servidor cuando continúa disponible y borrar todo el historial. El registro no guarda credenciales, cookies ni tokens.
+
+### FastFlags, migración y mantenimiento
+
+El editor de FastFlags ahora admite **perfiles nombrados**. Cada perfil se guarda como un JSON independiente dentro de `SavedBackups`; el usuario puede guardar la configuración actual, cargarla reemplazando toda la lista o fusionándola con los flags existentes, y eliminar perfiles. Los nombres se sanitizan para impedir rutas arbitrarias y la operación se registra en el log de la aplicación.
+
+El instalador incorpora migración opcional desde instalaciones detectadas de **Bloxstrap, Fishstrap o Voidstrap**. Copia configuraciones compatibles, temas y modificaciones sin borrar el origen y muestra una advertencia si no encuentra una instalación previa. La migración está aislada por archivo para que un problema con una fuente antigua no cancele toda la instalación de Synergy Strapper.
+
+Se eliminaron de `Images/` los tres banners obsoletos de Bloxstrap que ya no se utilizan. Las referencias históricas a Bloxstrap dentro de la migración, la atribución MIT y la limpieza de instalaciones antiguas se conservaron deliberadamente porque siguen siendo necesarias para compatibilidad y licencia.
+
+### Recursos visuales y distribución
+
+Se mejoraron los cuatro recursos del botón **Cancel** usados por el diálogo clásico de lanzamiento —estado claro, hover claro, estado oscuro y hover oscuro— de `130×44` a `520×176` píxeles con escalado de alta calidad. Se conserva la proporción, transparencia y función de cada estado para que el botón sea más nítido en escalado DPI alto.
+
+La versión de ensamblado, archivo y proyecto pasó a `1.0.3`. El workflow de release se actualizó para que las releases normales y los lanzamientos manuales publiquen un ejecutable `win-x64` single-file **autocontenido**, incluyendo `IncludeNativeLibrariesForSelfExtract`, además del checksum SHA-256. De este modo, la release v1.0.3 se compila desde el código fuente modificado en un runner Windows y no reutiliza el binario de la v1.0.2.
+
+### Verificación
+
+La solución fue restaurada y compilada con el SDK .NET 6.0.428 y `EnableWindowsTargeting=true` después de aplicar todos los cambios. La compilación Release local terminó con **0 errores y 0 advertencias**. La publicación final del ejecutable autocontenido se valida adicionalmente en el workflow Windows antes de crear o actualizar la release de GitHub.
+
 ## [1.0.2] — Synergy Strapper
 
 ### Mantenimiento y experiencia de usuario

@@ -23,6 +23,8 @@
         public static string Versions { get; private set; } = "";
         public static string Modifications { get; private set; } = "";
         public static string CustomThemes { get; private set; } = "";
+        public static string SavedBackups { get; private set; } = "";
+        public static string History { get; private set; } = "";
 
         // Roblox directories used by the optional maintenance cleaner.
         public static string Roblox { get; private set; } = "";
@@ -44,6 +46,8 @@
             Versions = Path.Combine(Base, "Versions");
             Modifications = Path.Combine(Base, "Modifications");
             CustomThemes = Path.Combine(Base, "CustomThemes");
+            SavedBackups = Path.Combine(Base, "SavedBackups");
+            History = Path.Combine(Base, "History.json");
             Roblox = Path.Combine(LocalAppData, "Roblox");
             RobloxLogs = Path.Combine(Roblox, "logs");
             RobloxCache = Path.Combine(Path.GetTempPath(), "Roblox");

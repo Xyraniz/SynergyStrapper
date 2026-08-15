@@ -17,7 +17,11 @@ Synergy Strapper instala y actualiza Roblox Player y Roblox Studio, ofrece una v
 
 El perfil de rendimiento incluido aplica únicamente ajustes conservadores y reversibles para reducir el uso de GPU y VRAM. No garantiza una cantidad concreta de FPS: Roblox puede cambiar o retirar FastFlags, y el resultado depende del hardware, la versión del cliente y la experiencia ejecutada. El perfil se puede desactivar desde la página de FastFlags.
 
-Desde la v1.0.2, la página de Synergy Strapper incluye una limpieza manual de mantenimiento. La acción elimina archivos con más de 30 días únicamente en las carpetas conocidas de logs y caché de Synergy Strapper y Roblox, conserva el log activo, ignora archivos de sistema y limita la operación a 200 archivos por carpeta.
+Desde la v1.0.3, Synergy Strapper incluye perfiles nombrados de FastFlags, un editor de Global Settings para las preferencias XML de Roblox, selector de canales para Player y Studio, navegador de servidores públicos, historial local de las últimas 50 partidas y migración opcional desde Bloxstrap, Fishstrap o Voidstrap. Estas funciones no almacenan cookies, tokens ni credenciales de Roblox.
+
+La página de Synergy Strapper también mantiene una limpieza manual de mantenimiento. La acción elimina archivos con más de 30 días únicamente en las carpetas conocidas de logs y caché de Synergy Strapper y Roblox, conserva el log activo, ignora archivos de sistema y limita la operación a 200 archivos por carpeta.
+
+Los perfiles de FastFlags se guardan como JSON dentro de la instalación y permiten guardar, fusionar, reemplazar o borrar configuraciones. El navegador de servidores utiliza únicamente el endpoint público de Roblox y aplica espera progresiva cuando la API limita solicitudes. El canal se escribe en las claves de registro que utiliza el bootstrapper, y la importación de otra instalación nunca elimina la fuente.
 
 ## Compilación
 
@@ -29,10 +33,10 @@ cd SynergyStrapper
 git submodule update --init --recursive
 dotnet restore
 dotnet build SynergyStrapper.sln -c Release
-dotnet publish SynergyStrapper/SynergyStrapper.csproj -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true
+dotnet publish SynergyStrapper/SynergyStrapper.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
 ```
 
-La publicación `--self-contained false` requiere .NET 6 Desktop Runtime en el equipo de destino. Para producir un ejecutable que incluya el runtime, se puede utilizar `--self-contained true`, aunque el artefacto será más grande. La publicación recomendada para distribución debe realizarse en Windows para conservar correctamente los recursos del apphost y firmarse con un certificado controlado por el distribuidor.
+La publicación oficial v1.0.3 es autocontenida: incluye el runtime de .NET 6 Desktop para reducir la posibilidad de que el usuario tenga que instalar dependencias manualmente. El artefacto es más grande y la publicación recomendada debe realizarse en Windows para conservar correctamente los recursos del apphost y firmarse con un certificado controlado por el distribuidor.
 
 ## Atribución y licencias
 
@@ -48,7 +52,7 @@ El código se mantiene como un fork independiente. Los cambios de rendimiento se
 
 Los ejecutables publicados deben distribuirse como **assets de GitHub Releases**, no como enlaces a archivos arbitrarios ni como binarios descargados desde terceros. El cliente consulta la última release publicada, selecciona exclusivamente el asset `SynergyStrapper.exe`, comprueba su tamaño y valida su SHA-256 antes de relanzar el proceso de actualización.
 
-El workflow `CI (Release)` compila siempre desde el código fuente en un runner Windows. Para una release normal, crea un tag semántico con el formato `vX.Y.Z` y súbelo a GitHub; el workflow compilará el single-file `win-x64` y adjuntará `SynergyStrapper.exe` junto con `SynergyStrapper.exe.sha256` a una release publicada. El tag y la versión de `SynergyStrapper/SynergyStrapper.csproj` deben coincidir.
+El workflow `CI (Release)` compila siempre desde el código fuente en un runner Windows. Para una release normal, crea un tag semántico con el formato `vX.Y.Z` y súbelo a GitHub; el workflow compilará el ejecutable autocontenido single-file `win-x64` y adjuntará `SynergyStrapper.exe` junto con `SynergyStrapper.exe.sha256` a una release publicada. El tag y la versión de `SynergyStrapper/SynergyStrapper.csproj` deben coincidir.
 
 El mismo workflow se puede ejecutar manualmente desde **Actions → CI (Release)**. El parámetro `release_tag` permite crear o reemplazar una release existente, y `source_ref` indica la rama o commit que se debe compilar. Esta modalidad se utiliza para corregir o regenerar los assets de una release ya publicada, por ejemplo `v1.0.1`, sin crear una nueva versión. El repositorio ya no necesita almacenar un `.exe` en la raíz.
 

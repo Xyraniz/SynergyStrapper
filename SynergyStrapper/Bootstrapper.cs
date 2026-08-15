@@ -407,7 +407,13 @@ namespace SynergyStrapper
             string? newVersionGuid = null;
             Version? newVersion = null;
 
-            if (!App.LaunchSettings.VersionFlag.Active || string.IsNullOrEmpty(App.LaunchSettings.VersionFlag.Data))
+            if (!App.Settings.Prop.UpdateRoblox && !String.IsNullOrEmpty(AppData.DistributionState.VersionGuid)
+                && !App.LaunchSettings.VersionFlag.Active)
+            {
+                App.Logger.WriteLine(LOG_IDENT, $"Roblox auto-update is disabled; keeping installed version {AppData.DistributionState.VersionGuid}.");
+                newVersionGuid = AppData.DistributionState.VersionGuid;
+            }
+            else if (!App.LaunchSettings.VersionFlag.Active || string.IsNullOrEmpty(App.LaunchSettings.VersionFlag.Data))
             {
                 ClientVersion clientVersion;
 

@@ -86,7 +86,9 @@ namespace SynergyStrapper.UI.Elements.Bootstrapper
             // 
             buttonCancel.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             buttonCancel.ForeColor = System.Drawing.Color.FromArgb(75, 75, 75);
-            buttonCancel.Image = Properties.Resources.CancelButton;
+            buttonCancel.Image = null;
+            buttonCancel.BackgroundImage = Properties.Resources.CancelButton;
+            buttonCancel.BackgroundImageLayout = ImageLayout.Stretch;
             buttonCancel.Location = new System.Drawing.Point(194, 264);
             buttonCancel.Name = "buttonCancel";
             buttonCancel.Size = new System.Drawing.Size(130, 44);
