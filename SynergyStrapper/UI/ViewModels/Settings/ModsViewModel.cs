@@ -97,8 +97,48 @@ namespace SynergyStrapper.UI.ViewModels.Settings
                     { @"content\textures\Cursors\KeyboardMouse\ArrowCursor.png",    "Cursor.From2013.ArrowCursor.png"    },
                     { @"content\textures\Cursors\KeyboardMouse\ArrowFarCursor.png", "Cursor.From2013.ArrowFarCursor.png" }
                 }
+            },
+            {
+                Enums.CursorType.CompetitiveCircle, new()
+                {
+                    { @"content\textures\Cursors\KeyboardMouse\ArrowCursor.png",    "Cursor.Competitive.Circle.png"    },
+                    { @"content\textures\Cursors\KeyboardMouse\ArrowFarCursor.png", "Cursor.Competitive.Circle.png" }
+                }
+            },
+            {
+                Enums.CursorType.CompetitiveCrosshair, new()
+                {
+                    { @"content\textures\Cursors\KeyboardMouse\ArrowCursor.png",    "Cursor.Competitive.Crosshair.png"    },
+                    { @"content\textures\Cursors\KeyboardMouse\ArrowFarCursor.png", "Cursor.Competitive.Crosshair.png" }
+                }
+            },
+            {
+                Enums.CursorType.Custom, new()
+                {
+                    { @"content\textures\Cursors\KeyboardMouse\ArrowCursor.png",    !String.IsNullOrEmpty(App.Settings.Prop.CustomCursorLocation) ? App.Settings.Prop.CustomCursorLocation : "Cursor.Competitive.Crosshair.png" },
+                    { @"content\textures\Cursors\KeyboardMouse\ArrowFarCursor.png", !String.IsNullOrEmpty(App.Settings.Prop.CustomCursorLocation) ? App.Settings.Prop.CustomCursorLocation : "Cursor.Competitive.Crosshair.png" }
+                }
             }
         });
+
+        private void ManageCustomCursor()
+        {
+            var dialog = new OpenFileDialog
+            {
+                Filter = "Image Files (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg"
+            };
+
+            if (dialog.ShowDialog() != true)
+                return;
+
+            App.Settings.Prop.CustomCursorLocation = dialog.FileName;
+            CursorTypeTask.NewState = Enums.CursorType.Custom;
+            CursorTypeTask.Execute();
+            OnPropertyChanged(nameof(CustomCursorText));
+        }
+
+        public string CustomCursorText => String.IsNullOrEmpty(App.Settings.Prop.CustomCursorLocation) ? Strings.Menu_Mods_Misc_CustomCursor_NotSet : Path.GetFileName(App.Settings.Prop.CustomCursorLocation);
+        public ICommand ManageCustomCursorCommand => new RelayCommand(ManageCustomCursor);
 
         public FontModPresetTask TextFontTask { get; } = new();
 

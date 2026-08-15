@@ -9,6 +9,7 @@ namespace SynergyStrapper.Models.Persistable
         public BootstrapperIcon BootstrapperIcon { get; set; } = BootstrapperIcon.IconSynergyStrapper;
         public string BootstrapperTitle { get; set; } = App.ProjectDisplayName;
         public string BootstrapperIconCustomLocation { get; set; } = "";
+        public string CustomCursorLocation { get; set; } = "";
         public Theme Theme { get; set; } = Theme.Default;
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public bool DeveloperMode { get; set; } = false;
