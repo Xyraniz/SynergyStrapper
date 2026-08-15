@@ -70,3 +70,9 @@ La palabra conserva su composición geométrica y de mayúsculas amplias. El iso
 ### Color distintivo
 
 **Plata orbital — `#D2D3D6`**. Este gris claro funciona como señal de acción y continuidad visual frente al grafito y el negro.
+
+## Decisiones de estilo
+
+La identidad visual se consolida como un sistema de **manual de operaciones monocromo**: reglas finas, campos de retícula, paneles modulares y geometría de cuadrados entrelazados. El **plata orbital** se reserva para acciones primarias, navegación activa, datos del sistema, avisos y numerales clave; todas las demás superficies permanecen en negro, carbón, grafito y blanco.
+
+La voz en español debe permanecer directa, verificable y sin promesas infladas. La web enfatiza el control, las releases oficiales, la reversibilidad y la idea de operar **sin conjeturas**.
