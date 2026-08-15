@@ -14,7 +14,7 @@ namespace SynergyStrapper
 
         public override string FileLocation => Path.Combine(Paths.Modifications, "ClientSettings", FileName);
 
-        public bool Changed => !OriginalProp.SequenceEqual(Prop);
+        public bool Changed => !DictionariesEqual(OriginalProp, Prop);
 
         public static IReadOnlyDictionary<string, string> PresetFlags = new Dictionary<string, string>
         {
@@ -67,12 +67,12 @@ namespace SynergyStrapper
             }
             else
             {
-                if (Prop.ContainsKey(key))
+                if (Prop.TryGetValue(key, out object? currentValue))
                 {
-                    if (key == Prop[key].ToString())
+                    if (String.Equals(currentValue?.ToString(), value.ToString(), StringComparison.Ordinal))
                         return;
 
-                    App.Logger.WriteLine(LOG_IDENT, $"Changing of '{key}' from '{Prop[key]}' to '{value}' is pending");
+                    App.Logger.WriteLine(LOG_IDENT, $"Changing of '{key}' from '{currentValue}' to '{value}' is pending");
                 }
                 else
                 {
@@ -251,13 +251,30 @@ namespace SynergyStrapper
         {
             // convert all flag values to strings before saving
 
-            foreach (var pair in Prop)
-                Prop[pair.Key] = pair.Value.ToString()!;
+            foreach (string key in Prop.Keys.ToList())
+                Prop[key] = Prop[key]?.ToString() ?? String.Empty;
 
             base.Save();
 
             // clone the dictionary
             OriginalProp = new(Prop);
+        }
+
+        private static bool DictionariesEqual(IReadOnlyDictionary<string, object> left, IReadOnlyDictionary<string, object> right)
+        {
+            if (left.Count != right.Count)
+                return false;
+
+            foreach (var pair in left)
+            {
+                if (!right.TryGetValue(pair.Key, out object? otherValue)
+                    || !String.Equals(pair.Value?.ToString(), otherValue?.ToString(), StringComparison.Ordinal))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public override bool Load(bool alertFailure = true)

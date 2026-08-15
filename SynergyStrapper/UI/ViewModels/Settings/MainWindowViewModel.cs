@@ -46,7 +46,7 @@ namespace SynergyStrapper.UI.ViewModels.Settings
             App.State.Save();
             App.FastFlags.Save();
 
-            foreach (var pair in App.PendingSettingTasks)
+            foreach (var pair in App.PendingSettingTasks.ToList())
             {
                 var task = pair.Value;
 
@@ -57,7 +57,16 @@ namespace SynergyStrapper.UI.ViewModels.Settings
                 }
             }
 
+            // A failed task keeps Changed=true (for example, when a remote
+            // emoji font cannot be downloaded). Do not discard that state or
+            // the user will be told that settings were saved when they were not.
+            var failedTasks = App.PendingSettingTasks.Values
+                .Where(task => task.Changed)
+                .ToList();
+
             App.PendingSettingTasks.Clear();
+            foreach (var task in failedTasks)
+                App.PendingSettingTasks[task.Name] = task;
 
             RequestSaveNoticeEvent?.Invoke(this, EventArgs.Empty);
         }

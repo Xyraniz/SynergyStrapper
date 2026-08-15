@@ -1,6 +1,4 @@
-﻿using SynergyStrapper.Models.SettingTasks.Base;
-
-namespace SynergyStrapper.Models.SettingTasks
+﻿namespace SynergyStrapper.Models.SettingTasks
 {
     public class FontModPresetTask : StringBaseTask
     {
@@ -23,21 +21,46 @@ namespace SynergyStrapper.Models.SettingTasks
         {
             if (!String.IsNullOrEmpty(NewState))
             {
-                if (String.Compare(NewState, Paths.CustomFont, StringComparison.InvariantCultureIgnoreCase) != 0 && File.Exists(NewState))
+                if (String.Equals(NewState, Paths.CustomFont, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    Directory.CreateDirectory(Path.GetDirectoryName(Paths.CustomFont)!);
-
-                    Filesystem.AssertReadOnly(Paths.CustomFont);
-                    File.Copy(NewState, Paths.CustomFont, true);
+                    OriginalState = File.Exists(Paths.CustomFont) ? NewState : OriginalState;
+                    return;
                 }
+
+                if (!File.Exists(NewState))
+                {
+                    App.Logger.WriteLine("FontModPresetTask::Execute", $"Font file does not exist: {NewState}");
+                    return;
+                }
+
+                Directory.CreateDirectory(Path.GetDirectoryName(Paths.CustomFont)!);
+                string temporaryPath = Paths.CustomFont + ".tmp";
+
+                try
+                {
+                    Filesystem.AssertReadOnly(temporaryPath);
+                    File.Copy(NewState, temporaryPath, true);
+                    Filesystem.AssertReadOnly(Paths.CustomFont);
+                    File.Move(temporaryPath, Paths.CustomFont, true);
+                }
+                finally
+                {
+                    if (File.Exists(temporaryPath))
+                        File.Delete(temporaryPath);
+                }
+
+                OriginalState = File.Exists(Paths.CustomFont) ? NewState : OriginalState;
             }
             else if (File.Exists(Paths.CustomFont))
             {
                 Filesystem.AssertReadOnly(Paths.CustomFont);
                 File.Delete(Paths.CustomFont);
+                OriginalState = "";
             }
-
-            OriginalState = NewState;
+            else
+            {
+                OriginalState = "";
+            }
         }
     }
 }

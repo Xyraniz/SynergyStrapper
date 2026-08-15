@@ -1,7 +1,5 @@
 ﻿using System.Windows;
 
-using SynergyStrapper.Models.SettingTasks.Base;
-
 namespace SynergyStrapper.Models.SettingTasks
 {
     public class EmojiModPresetTask : EnumBaseTask<EmojiType>
@@ -27,25 +25,26 @@ namespace SynergyStrapper.Models.SettingTasks
                 OriginalState = query.FirstOrDefault().Key;
         }
 
-        public override async void Execute()
+        public override void Execute()
         {
             const string LOG_IDENT = "EmojiModPresetTask::Execute";
-
             var query = QueryCurrentValue();
 
             if (NewState != EmojiType.Default && (query is null || query.FirstOrDefault().Key != NewState))
             {
+                string temporaryPath = _filePath + ".tmp";
+
                 try
                 {
-                    var response = await App.HttpClient.GetAsync(NewState.GetUrl());
-
+                    using HttpResponseMessage response = App.HttpClient.GetAsync(NewState.GetUrl()).GetAwaiter().GetResult();
                     response.EnsureSuccessStatusCode();
+                    byte[] contents = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
 
                     Directory.CreateDirectory(Path.GetDirectoryName(_filePath)!);
-
-                    await using var fileStream = new FileStream(_filePath, FileMode.Create);
-                    await response.Content.CopyToAsync(fileStream);
-
+                    Filesystem.AssertReadOnly(temporaryPath);
+                    File.WriteAllBytes(temporaryPath, contents);
+                    Filesystem.AssertReadOnly(_filePath);
+                    File.Move(temporaryPath, _filePath, true);
                     OriginalState = NewState;
                 }
                 catch (Exception ex)
@@ -59,13 +58,17 @@ namespace SynergyStrapper.Models.SettingTasks
                         ex
                     );
                 }
+                finally
+                {
+                    if (File.Exists(temporaryPath))
+                        File.Delete(temporaryPath);
+                }
             }
             else if (query is not null && query.Any())
             {
                 Filesystem.AssertReadOnly(_filePath);
                 File.Delete(_filePath);
-
-                OriginalState = NewState;
+                OriginalState = EmojiType.Default;
             }
         }
     }

@@ -60,6 +60,8 @@
                 else
                 {
                     App.Logger.WriteLine(LOG_IDENT, $"Could not find {FileLocation}.");
+                    _prop = new();
+                    LastFileHash = null;
                     Loaded = true;
 
                     return false;
@@ -142,6 +144,8 @@
                     File.Delete(FileLocation);
 
                     Loaded = false;
+                    LastFileHash = null;
+                    _prop = new();
                     App.Logger.WriteLine(LOG_IDENT, "Delete complete!");
                 }
                 else
@@ -163,11 +167,31 @@
         /// </summary>
         public bool HasFileOnDiskChanged()
         {
-            // check if a file has been created since launch
-            if (string.IsNullOrEmpty(LastFileHash) && File.Exists(FileLocation))
+            bool exists = File.Exists(FileLocation);
+
+            // A file created after launch is a disk change. A file deleted after it
+            // was loaded is also a change, while a missing file that never existed
+            // is not considered a change.
+            if (!exists)
+                return !string.IsNullOrEmpty(LastFileHash);
+
+            if (string.IsNullOrEmpty(LastFileHash))
                 return true;
 
-            return LastFileHash != MD5Hash.FromFile(FileLocation);
+            try
+            {
+                return !String.Equals(LastFileHash, MD5Hash.FromFile(FileLocation), StringComparison.Ordinal);
+            }
+            catch (IOException)
+            {
+                // A file that cannot be read safely must not be overwritten by an
+                // updater or a repair operation.
+                return true;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return true;
+            }
         }
     }
 

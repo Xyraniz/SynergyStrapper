@@ -71,7 +71,7 @@ namespace SynergyStrapper.Integrations
             //
             // we'll tail the log file continuously, monitoring for any log entries that we need to determine the current game activity
             
-            FileInfo logFileInfo;
+            FileInfo? logFileInfo = null;
 
             if (String.IsNullOrEmpty(LogLocation))
             {
@@ -80,32 +80,44 @@ namespace SynergyStrapper.Integrations
                 if (!Directory.Exists(logDirectory))
                     return;
 
-                // we need to make sure we're fetching the absolute latest log file
-                // if roblox doesn't start quickly enough, we can wind up fetching the previous log file
-                // good rule of thumb is to find a log file that was created in the last 15 seconds or so
-
+                // We need the latest Player log, but the process may create it
+                // slightly after the watcher starts. Never call First() on an
+                // empty directory: a normal startup race must not crash the app.
                 App.Logger.WriteLine(LOG_IDENT, "Opening Roblox log file...");
 
-                while (true)
+                while (!IsDisposed)
                 {
-                    logFileInfo = new DirectoryInfo(logDirectory)
+                    FileInfo? newestLog = new DirectoryInfo(logDirectory)
                         .GetFiles()
                         .Where(x => x.Name.Contains("Player", StringComparison.OrdinalIgnoreCase) && x.CreationTime <= DateTime.Now)
                         .OrderByDescending(x => x.CreationTime)
-                        .First();
+                        .FirstOrDefault();
 
-                    if (logFileInfo.CreationTime.AddSeconds(15) > DateTime.Now)
+                    if (newestLog is not null && newestLog.CreationTime.AddSeconds(15) > DateTime.Now)
+                    {
+                        logFileInfo = newestLog;
                         break;
+                    }
 
-                    App.Logger.WriteLine(LOG_IDENT, $"Could not find recent enough log file, waiting... (newest is {logFileInfo.Name})");
+                    string newestName = newestLog?.Name ?? "none";
+                    App.Logger.WriteLine(LOG_IDENT, $"Could not find recent enough log file, waiting... (newest is {newestName})");
                     await Task.Delay(1000);
                 }
+
+                if (IsDisposed || logFileInfo is null)
+                    return;
 
                 LogLocation = logFileInfo.FullName;
             }
             else
             {
                 logFileInfo = new FileInfo(LogLocation);
+            }
+
+            if (!logFileInfo.Exists)
+            {
+                App.Logger.WriteLine(LOG_IDENT, $"Log file does not exist: {LogLocation}");
+                return;
             }
 
             OnLogOpen?.Invoke(this, EventArgs.Empty);
@@ -182,8 +194,14 @@ namespace SynergyStrapper.Integrations
                         return;
                     }
 
+                    if (!Int64.TryParse(match.Groups[2].Value, out long placeId))
+                    {
+                        App.Logger.WriteLine(LOG_IDENT, "Failed to parse place ID from game join entry");
+                        return;
+                    }
+
                     InGame = false;
-                    Data.PlaceId = long.Parse(match.Groups[2].Value);
+                    Data.PlaceId = placeId;
                     Data.JobId = match.Groups[1].Value;
                     Data.MachineAddress = match.Groups[3].Value;
 
@@ -220,8 +238,15 @@ namespace SynergyStrapper.Integrations
                         return;
                     }
 
-                    Data.UniverseId = Int64.Parse(match.Groups[1].Value);
-                    Data.UserId = Int64.Parse(match.Groups[2].Value);
+                    if (!Int64.TryParse(match.Groups[1].Value, out long universeId)
+                        || !Int64.TryParse(match.Groups[2].Value, out long userId))
+                    {
+                        App.Logger.WriteLine(LOG_IDENT, "Failed to parse universe or user ID from game join entry");
+                        return;
+                    }
+
+                    Data.UniverseId = universeId;
+                    Data.UserId = userId;
 
                     var loadTimeMatch = Regex.Match(logMessage, GameJoinReferralPattern);
 

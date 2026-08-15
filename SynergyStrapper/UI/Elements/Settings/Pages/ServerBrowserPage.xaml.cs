@@ -10,6 +10,7 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
         private readonly List<RobloxServerEntry> _allServers = new();
         private readonly List<RobloxServerEntry> _visibleServers = new();
         private CancellationTokenSource? _loadCancellation;
+        private CancellationTokenSource? _placeIdChangeCancellation;
         private DateTime _nextAllowedLoad = DateTime.MinValue;
         private int _limit = 50;
         private string _sort = "ping";
@@ -18,17 +19,29 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
         public ServerBrowserPage()
         {
             InitializeComponent();
-            ServersGrid.ItemsSource = _visibleServers;
+
+            // Keep the grid bound even while the page is empty. SelectionChanged
+            // events can fire during InitializeComponent before the field exists,
+            // so ApplySorting also guards the control below.
+            if (ServersGrid is not null)
+                ServersGrid.ItemsSource = _visibleServers;
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            PlaceIdTextBox.Text = App.Settings.Prop.LastServerPlaceId;
+            string? lastPlaceId = App.Settings.Prop?.LastServerPlaceId;
+            PlaceIdTextBox.Text = lastPlaceId ?? String.Empty;
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
+            _placeIdChangeCancellation?.Cancel();
+            _placeIdChangeCancellation?.Dispose();
+            _placeIdChangeCancellation = null;
+
             _loadCancellation?.Cancel();
+            _loadCancellation?.Dispose();
+            _loadCancellation = null;
         }
 
         private async void RefreshButton_Click(object sender, RoutedEventArgs e)
@@ -41,18 +54,39 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
             if (!IsLoaded)
                 return;
 
-            string value = PlaceIdTextBox.Text.Trim();
+            string value = PlaceIdTextBox.Text?.Trim() ?? String.Empty;
+            _placeIdChangeCancellation?.Cancel();
+
             if (String.IsNullOrEmpty(value))
             {
                 _allServers.Clear();
                 _visibleServers.Clear();
-                ServersGrid.Items.Refresh();
+                ApplySorting();
                 StatusTextBlock.Text = "Enter a Place ID to load public servers.";
                 return;
             }
 
-            if (value.All(Char.IsDigit) && value.Length >= 3)
-                await LoadServersAsync(false);
+            if (!value.All(Char.IsDigit) || value.Length < 3)
+            {
+                StatusTextBlock.Text = "Place ID must contain only numbers.";
+                return;
+            }
+
+            _placeIdChangeCancellation = new CancellationTokenSource();
+            CancellationToken token = _placeIdChangeCancellation.Token;
+
+            try
+            {
+                // Wait until the user has finished typing instead of querying
+                // Roblox with every partial Place ID.
+                await Task.Delay(400, token);
+                if (String.Equals(value, PlaceIdTextBox.Text?.Trim(), StringComparison.Ordinal))
+                    await LoadServersAsync(false);
+            }
+            catch (OperationCanceledException)
+            {
+                // A newer text change replaced this pending request.
+            }
         }
 
         private void SortComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -66,21 +100,38 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
 
         private void LimitComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (LimitComboBox.SelectedItem is ComboBoxItem item && Int32.TryParse(item.Tag?.ToString(), out int limit))
+            if (LimitComboBox.SelectedItem is ComboBoxItem item
+                && Int32.TryParse(item.Tag?.ToString(), out int limit)
+                && limit > 0)
             {
                 _limit = limit;
                 ApplySorting();
             }
         }
 
-        private async Task LoadServersAsync(bool manual)
+        private bool TryGetPlaceId(out string placeId)
         {
-            string placeId = PlaceIdTextBox.Text.Trim();
+            placeId = PlaceIdTextBox.Text?.Trim() ?? String.Empty;
+
+            if (String.IsNullOrEmpty(placeId))
+            {
+                StatusTextBlock.Text = "Enter a Place ID to load public servers.";
+                return false;
+            }
+
             if (!placeId.All(Char.IsDigit))
             {
                 StatusTextBlock.Text = "Place ID must contain only numbers.";
-                return;
+                return false;
             }
+
+            return true;
+        }
+
+        private async Task LoadServersAsync(bool manual)
+        {
+            if (!TryGetPlaceId(out string placeId))
+                return;
 
             if (!manual && DateTime.UtcNow < _nextAllowedLoad)
                 return;
@@ -93,6 +144,7 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
 
             _nextAllowedLoad = DateTime.UtcNow.AddSeconds(20);
             _loadCancellation?.Cancel();
+            _loadCancellation?.Dispose();
             _loadCancellation = new CancellationTokenSource();
             CancellationToken token = _loadCancellation.Token;
             StatusTextBlock.Text = "Loading public servers...";
@@ -111,7 +163,10 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
 
                 response.EnsureSuccessStatusCode();
                 string json = await response.Content.ReadAsStringAsync(token);
-                RobloxServerResponse? result = JsonSerializer.Deserialize<RobloxServerResponse>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                RobloxServerResponse? result = JsonSerializer.Deserialize<RobloxServerResponse>(
+                    json,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
                 if (result?.Data is null)
                 {
                     StatusTextBlock.Text = "Roblox returned no server data.";
@@ -123,13 +178,13 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
                 App.Settings.Save();
 
                 _allServers.Clear();
-                _allServers.AddRange(result.Data);
+                _allServers.AddRange(result.Data.Where(x => x is not null).Select(x => x!));
                 ApplySorting();
                 StatusTextBlock.Text = $"Loaded {_allServers.Count} public servers. Double-click a row or use Join selected.";
             }
             catch (OperationCanceledException)
             {
-                // A newer request replaced this one.
+                // A newer request replaced this one or the page was unloaded.
             }
             catch (Exception ex)
             {
@@ -140,6 +195,12 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
 
         private void ApplySorting()
         {
+            // ComboBox selection events can fire while InitializeComponent is
+            // still building the visual tree. The DataGrid is declared later in
+            // XAML, so it is not safe to refresh it until construction is done.
+            if (ServersGrid is null)
+                return;
+
             IEnumerable<RobloxServerEntry> ordered = _sort switch
             {
                 "players" => _allServers.OrderBy(x => x.Playing).ThenBy(x => x.Ping),
@@ -155,7 +216,7 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
 
         private void CopyButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ServersGrid.SelectedItem is RobloxServerEntry server)
+            if (ServersGrid.SelectedItem is RobloxServerEntry server && !String.IsNullOrWhiteSpace(server.Id))
                 Clipboard.SetText(server.Id);
         }
 
@@ -173,13 +234,13 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
 
         private void JoinServer(string serverId)
         {
-            string placeId = PlaceIdTextBox.Text.Trim();
+            if (!TryGetPlaceId(out string placeId) || String.IsNullOrWhiteSpace(serverId))
+                return;
+
             try
             {
-                Process.Start(new ProcessStartInfo($"roblox://experiences/start?placeId={placeId}&serverId={serverId}")
-                {
-                    UseShellExecute = true
-                });
+                string uri = $"roblox://experiences/start?placeId={Uri.EscapeDataString(placeId)}&serverId={Uri.EscapeDataString(serverId)}";
+                Process.Start(new ProcessStartInfo(uri) { UseShellExecute = true });
             }
             catch (Exception ex)
             {

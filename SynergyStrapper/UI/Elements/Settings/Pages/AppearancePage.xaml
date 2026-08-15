@@ -16,7 +16,7 @@
 
         <controls:OptionControl
             Header="{x:Static resources:Strings.Menu_Appearance_Global_Theme_Title}">
-            <ComboBox Width="200" Padding="10,5,10,5" ItemsSource="{Binding Themes, Mode=OneTime}" Text="{Binding Theme, Mode=TwoWay}">
+            <ComboBox Width="200" Padding="10,5,10,5" ItemsSource="{Binding Themes, Mode=OneTime}" SelectedItem="{Binding Theme, Mode=TwoWay}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Path=., Converter={StaticResource EnumNameConverter}}" />
@@ -28,7 +28,7 @@
         <controls:OptionControl
             Header="{x:Static resources:Strings.Menu_Appearance_Language_Title}"
             Description="{x:Static resources:Strings.Menu_Appearance_Language_Description}">
-            <ComboBox Width="200" Padding="10,5,10,5" ItemsSource="{Binding Languages, Mode=OneTime}" Text="{Binding SelectedLanguage, Mode=TwoWay}" />
+            <ComboBox Width="200" Padding="10,5,10,5" ItemsSource="{Binding Languages, Mode=OneTime}" SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}" />
         </controls:OptionControl>
 
         <Grid Margin="0,8,0,0">
@@ -55,7 +55,7 @@
                             <TextBlock FontSize="14" Text="{x:Static resources:Strings.Menu_Appearance_Style_Title}" />
                             <TextBlock FontSize="12" Text="{x:Static resources:Strings.Menu_Appearance_Style_Description}" Foreground="{DynamicResource TextFillColorTertiaryBrush}"  />
                         </StackPanel>
-                        <ComboBox Width="200" Padding="10,5,10,5" ItemsSource="{Binding Dialogs, Mode=OneTime}" Text="{Binding Dialog, Mode=TwoWay}" Grid.Column="1">
+                        <ComboBox Width="200" Padding="10,5,10,5" ItemsSource="{Binding Dialogs, Mode=OneTime}" SelectedItem="{Binding Dialog, Mode=TwoWay}" Grid.Column="1">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Path=., Converter={StaticResource EnumNameConverter}}" />

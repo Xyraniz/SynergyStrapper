@@ -17,10 +17,15 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
 
         public void CustomThemeSelection(object sender, SelectionChangedEventArgs e)
         {
-            AppearanceViewModel viewModel = (AppearanceViewModel)DataContext;
+            if (DataContext is not AppearanceViewModel viewModel
+                || sender is not ListBox list
+                || list.SelectedItem is not string selectedTheme)
+            {
+                return;
+            }
 
-            viewModel.SelectedCustomTheme = (string)((ListBox)sender).SelectedItem;
-            viewModel.SelectedCustomThemeName = viewModel.SelectedCustomTheme;
+            viewModel.SelectedCustomTheme = selectedTheme;
+            viewModel.SelectedCustomThemeName = selectedTheme;
 
             viewModel.OnPropertyChanged(nameof(viewModel.SelectedCustomTheme));
             viewModel.OnPropertyChanged(nameof(viewModel.SelectedCustomThemeName));

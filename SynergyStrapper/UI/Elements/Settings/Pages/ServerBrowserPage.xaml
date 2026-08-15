@@ -12,6 +12,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -19,7 +20,7 @@
         <TextBlock Grid.Row="0" FontSize="20" FontWeight="SemiBold" Text="Server browser" />
         <TextBlock Grid.Row="1" Margin="0,4,0,12" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Text="Find public Roblox servers by Place ID, compare player counts and choose a server with the lowest reported ping." />
 
-        <Grid Grid.Row="1" Margin="0,54,0,8">
+        <Grid Grid.Row="2" Margin="0,0,0,8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -40,7 +41,7 @@
             <ui:Button Grid.Column="3" Content="Refresh" Icon="ArrowClockwise24" Click="RefreshButton_Click" />
         </Grid>
 
-        <DataGrid x:Name="ServersGrid" Grid.Row="2" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single" MouseDoubleClick="ServersGrid_MouseDoubleClick">
+        <DataGrid x:Name="ServersGrid" Grid.Row="3" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single" MouseDoubleClick="ServersGrid_MouseDoubleClick">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Players" Binding="{Binding PlayerSummary}" Width="140" />
                 <DataGridTextColumn Header="Ping" Binding="{Binding PingSummary}" Width="110" />
@@ -49,7 +50,7 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Grid Grid.Row="3" Margin="0,12,0,0">
+        <Grid Grid.Row="4" Margin="0,12,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />

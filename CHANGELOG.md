@@ -1,5 +1,35 @@
 # Changelog
 
+## [1.0.4] — Synergy Strapper
+
+### Correcciones críticas
+
+Se corrigió el fallo que podía cerrar la aplicación con `TargetInvocationException` y `NullReferenceException` al abrir **Server Browser**. Los elementos `ComboBox` de orden y límite disparaban `SelectionChanged` durante `InitializeComponent`, antes de que `ServersGrid` existiera; ahora la actualización de la tabla es segura durante la construcción de la página. También se reorganizaron las filas del XAML para separar descripción, controles, tabla y acciones sin superposición.
+
+Se endureció Server Browser frente a configuraciones antiguas con `LastServerPlaceId` nulo, respuestas JSON con servidores incompletos, Place IDs inválidos, cambios rápidos de texto, peticiones canceladas y errores de rate limit. Las peticiones ya no se lanzan con cada carácter escrito; se espera a que el usuario termine de introducir el ID. Los deeplinks de unión escapan sus parámetros y la página cancela y libera sus tareas al cerrarse.
+
+Se corrigieron los bindings de todos los selectores `ComboBox` de configuración que estaban enlazados mediante `Text` en vez de `SelectedItem`. Esto afectaba especialmente al cursor, pero también a emojis, MSAA, calidad de textura, tema, idioma y estilo del bootstrapper. Los cambios seleccionados ahora llegan realmente a sus propiedades y tareas pendientes.
+
+### Mods, cursores y restauración
+
+Se verificó el problema de los cursores. La causa no era una broma: el selector estaba usando un binding incorrecto y podía mostrar la opción sin cambiar `CursorTypeTask.NewState`, por lo que al guardar no se aplicaba ningún archivo. El selector conserva los dos presets existentes, **From 2006** y **From 2013**, y ahora aplica correctamente `ArrowCursor.png` y `ArrowFarCursor.png` a las rutas de Roblox correspondientes. Se verificaron los cuatro recursos embebidos: son PNG válidos de `80×80` o `64×64` con transparencia.
+
+Se corrigió la tarea genérica de presets enum para no abrir dos streams por recurso, reparar presets parcialmente aplicados, eliminar únicamente archivos cuyo hash coincide con un recurso conocido y limpiar variantes anteriores al cambiar de preset. Esto evita falsos estados “activado” y protege archivos externos que el usuario haya colocado en la carpeta de modificaciones.
+
+Se aplicó la misma lógica de reparación parcial a los presets booleanos de sonidos y avatar. Las fuentes personalizadas ahora se copian mediante un archivo temporal, validan que el archivo fuente siga existiendo y no marcan la tarea como completada si la copia no terminó. El preset de emojis dejó de ser `async void`, descarga de forma controlada, reemplaza atómicamente, limpia temporales y conserva la tarea pendiente cuando GitHub no está disponible.
+
+### Configuración y estabilidad
+
+Se corrigió `FastFlagManager.SetValue`, que comparaba una clave con su propio valor en vez de comparar el valor anterior con el nuevo. También se sustituyó la comparación sensible al orden de los diccionarios por una comparación semántica de claves y valores normalizados, y se evitó modificar el diccionario mientras se enumeraba.
+
+Se hizo seguro el guardado de tareas pendientes mediante una instantánea. Si una tarea falla, por ejemplo al descargar una fuente de emojis, ya no se borra silenciosamente el cambio pendiente ni se informa al usuario de que todo se guardó cuando no fue así.
+
+`JsonManager` ahora limpia el hash y el objeto en memoria cuando un archivo no existe o se elimina, y `HasFileOnDiskChanged` ya no intenta abrir archivos ausentes ni oculta errores de acceso. El watcher de Roblox dejó de usar `First()` sobre una carpeta de logs vacía, espera de forma cancelable a que aparezca un log válido, comprueba que el archivo exista y rechaza IDs malformados sin lanzar excepciones.
+
+### Verificación
+
+La solución fue restaurada y compilada con el SDK exacto `.NET 6.0.428`, con el submódulo Wpf.Ui inicializado y `EnableWindowsTargeting=true`. La compilación Release local terminó con **0 errores y 0 advertencias**. También se ejecutaron comprobaciones estáticas de bindings XAML, recursos de cursor, formato de archivos, diff y estructura de la solución. La compilación Windows del workflow de GitHub se mantiene como validación adicional antes de publicar el ejecutable autocontenido.
+
 ## [1.0.3] — Synergy Strapper
 
 ### Experiencia de usuario y configuración

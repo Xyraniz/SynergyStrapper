@@ -17,8 +17,14 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
 
         public void CustomIntegrationSelection(object sender, SelectionChangedEventArgs e)
         {
-            IntegrationsViewModel viewModel = (IntegrationsViewModel)DataContext;
-            viewModel.SelectedCustomIntegration = (CustomIntegration)((ListBox)sender).SelectedItem;
+            if (DataContext is not IntegrationsViewModel viewModel
+                || sender is not ListBox list
+                || list.SelectedItem is not CustomIntegration selectedIntegration)
+            {
+                return;
+            }
+
+            viewModel.SelectedCustomIntegration = selectedIntegration;
             viewModel.OnPropertyChanged(nameof(viewModel.SelectedCustomIntegration));
         }
     }

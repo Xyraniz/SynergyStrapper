@@ -17,7 +17,7 @@ Synergy Strapper instala y actualiza Roblox Player y Roblox Studio, ofrece una v
 
 El perfil de rendimiento incluido aplica únicamente ajustes conservadores y reversibles para reducir el uso de GPU y VRAM. No garantiza una cantidad concreta de FPS: Roblox puede cambiar o retirar FastFlags, y el resultado depende del hardware, la versión del cliente y la experiencia ejecutada. El perfil se puede desactivar desde la página de FastFlags.
 
-Desde la v1.0.3, Synergy Strapper incluye perfiles nombrados de FastFlags, un editor de Global Settings para las preferencias XML de Roblox, selector de canales para Player y Studio, navegador de servidores públicos, historial local de las últimas 50 partidas y migración opcional desde Bloxstrap, Fishstrap o Voidstrap. Estas funciones no almacenan cookies, tokens ni credenciales de Roblox.
+Desde la v1.0.4, Synergy Strapper incluye perfiles nombrados de FastFlags, un editor de Global Settings para las preferencias XML de Roblox, selector de canales para Player y Studio, navegador de servidores públicos, historial local de las últimas 50 partidas y migración opcional desde Bloxstrap, Fishstrap o Voidstrap. Estas funciones no almacenan cookies, tokens ni credenciales de Roblox. La 1.0.4 corrige bindings de selectores, la apertura de Server Browser, la restauración de mods y el manejo de errores del watcher.
 
 La página de Synergy Strapper también mantiene una limpieza manual de mantenimiento. La acción elimina archivos con más de 30 días únicamente en las carpetas conocidas de logs y caché de Synergy Strapper y Roblox, conserva el log activo, ignora archivos de sistema y limita la operación a 200 archivos por carpeta.
 
@@ -36,7 +36,7 @@ dotnet build SynergyStrapper.sln -c Release
 dotnet publish SynergyStrapper/SynergyStrapper.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
 ```
 
-La publicación oficial v1.0.3 es autocontenida: incluye el runtime de .NET 6 Desktop para reducir la posibilidad de que el usuario tenga que instalar dependencias manualmente. El artefacto es más grande y la publicación recomendada debe realizarse en Windows para conservar correctamente los recursos del apphost y firmarse con un certificado controlado por el distribuidor.
+La publicación oficial v1.0.4 es autocontenida: incluye el runtime de .NET 6 Desktop para reducir la posibilidad de que el usuario tenga que instalar dependencias manualmente. El artefacto es más grande y la publicación recomendada debe realizarse en Windows para conservar correctamente los recursos del apphost y firmarse con un certificado controlado por el distribuidor.
 
 ## Atribución y licencias
 
