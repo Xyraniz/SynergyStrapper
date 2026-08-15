@@ -13,7 +13,7 @@ namespace SynergyStrapper
         /// Which version's release notes to open
         /// Leave blank to use the current version
         /// </summary>
-        private const string ForcedReleaseNotesVersion = "2.11.2";
+        private const string ForcedReleaseNotesVersion = "";
 
         private static string DesktopShortcut => Path.Combine(Paths.Desktop, $"{App.ProjectName}.lnk");
 
