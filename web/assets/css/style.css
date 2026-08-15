@@ -174,7 +174,7 @@ code { padding: .1em .38em; border: 1px solid var(--line); border-radius: 3px; b
 .wiki-section p a:hover { color: var(--white); }
 .wiki-callout { position: relative; display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: .9rem; margin-top: 2rem; padding: 1.15rem 1.25rem; overflow: hidden; border-left: 2px solid var(--signal); background: linear-gradient(90deg, var(--signal-wash), rgba(255,255,255,.025)); }
 .wiki-callout::after { content: ""; position: absolute; top: -18px; right: -18px; width: 52px; height: 52px; border: 10px solid rgba(225,227,230,.12); border-radius: 16%; transform: rotate(45deg); }
-.wiki-callout__symbol { position: relative; z-index: 1; display: grid; place-items: center; width: 22px; height: 22px; border: 1px solid var(--signal); border-radius: 50%; color: var(--signal); } .wiki-callout__symbol::before { content: ""; width: 7px; height: 7px; border: 1px solid currentColor; border-radius: 2px; transform: rotate(45deg); }
+.wiki-callout__symbol { position: relative; z-index: 1; display: grid; place-items: center; width: 22px; height: 22px; border: 1px solid var(--signal); border-radius: 50%; color: var(--signal); font-family: var(--display); font-size: .72rem; font-weight: 700; }
 .wiki-callout p { margin: 0; color: var(--muted-strong); font-size: .91rem; }
 .wiki-callout--quiet { border-left-color: var(--muted); background: transparent; }
 .wiki-callout--quiet::after { border-color: rgba(255,255,255,.06); }
