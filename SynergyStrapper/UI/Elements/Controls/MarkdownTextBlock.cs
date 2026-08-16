@@ -111,6 +111,9 @@ namespace SynergyStrapper.UI.Elements.Controls
 
             markdownTextBlock.Inlines.Clear();
 
+            if (!document.Any())
+                return;
+
             var lastBlock = document.Last();
 
             // matt was evidently very tired on the night he was first writing this

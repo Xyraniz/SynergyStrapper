@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.0.9] — Synergy Strapper
+
+### Estabilidad y Mods
+
+Se corrigió la excepción `TargetInvocationException` y `InvalidOperationException` (Sequence contains no matching element) que cerraba el bootstrapper al abrir la pestaña de modificadores (`ModsPage`). Se añadió una comprobación de seguridad en `MarkdownTextBlock` para evitar fallos al procesar bloques de texto nulos o vacíos.
+
+### Interfaz y Configuración
+
+Se eliminó la pestaña de información innecesaria de la versión 1.0.8 ("Synergy 1.0.8 Features") del panel de configuración y se reordenaron las pestañas de configuración para ofrecer una navegación más limpia y lógica.
+
 ## [1.0.8] — Synergy Strapper
 
 ### Deployment y ciclo de vida
