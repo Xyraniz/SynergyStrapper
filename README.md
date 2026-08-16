@@ -17,24 +17,6 @@ La documentación de instalación, configuración y diagnóstico está disponibl
 
 Synergy Strapper instala y actualiza Roblox Player y Roblox Studio, ofrece una ventana de configuración, estilos de bootstrapper personalizables, gestión reversible de FastFlags, accesos directos, integraciones opcionales y herramientas de diagnóstico. El proyecto está diseñado para equipos Windows 10 o posteriores.
 
-### Novedades de la versión 1.0.8
-
-La versión 1.0.8 incorpora multiinstancia controlada, directorio estático opcional, guardia contra channel pins residuales, cleaner configurable con preview, memory trimmer opt-in, control avanzado del crash handler y preferencias independientes de bandeja y ciclo de vida.
-
-También añade gestión respaldada de `appStorage.json`, sonido de muerte reversible, cuatro ranuras de cursor independientes con importación/exportación ZIP, iconos separados para Player y Studio, disponibilidad versionada de FastFlags, preservación de tipos JSON, perfiles de rendimiento reversibles, control de FPS, mod packs especializados para Studio, historial con región y tiempo total, y un overlay informativo click-through sin inyección. Las opciones de riesgo están desactivadas por defecto y las operaciones destructivas crean backups o solicitan confirmación.
-
-### Novedades de la versión 1.0.7
-
-La versión 1.0.7 corrigió la representación visual del branding de Synergy Strapper en la ventana principal, el menú de lanzamiento y las ventanas auxiliares. Las superficies WPF usan ahora el PNG transparente de alta resolución y los iconos nativos incluyen tamaños múltiples para evitar fondos opacos y pérdida de nitidez.
-
-### Novedades de la versión 1.0.6
-
-La versión 1.0.6 incorpora un **FastFlag Health Check** dentro del editor. Esta herramienta valida nombres y valores, detecta filtros mal formados, muestra advertencias y enseña el diff de cambios pendientes desde el último guardado antes de que el usuario aplique una configuración.
-
-También incorpora **previsualización de cursores**. Los cursores incluidos se muestran en la página de Mods y los cursores PNG personalizados se validan, se copian a una ubicación administrada por Synergy Strapper y se reutilizan desde allí para evitar que una ruta externa rota deje el preset inutilizable.
-
-El perfil de rendimiento incluido aplica únicamente ajustes conservadores y reversibles para reducir el uso de GPU y VRAM. No garantiza una cantidad concreta de FPS: Roblox puede cambiar o retirar FastFlags, y el resultado depende del hardware, la versión del cliente y la experiencia ejecutada. El perfil se puede desactivar desde la página de FastFlags.
-
 ## Compilación
 
 La solución requiere el SDK de .NET 6.0.428 indicado en `global.json`, además de un entorno capaz de compilar WPF para Windows. El submódulo `wpfui` debe estar inicializado antes de restaurar dependencias.
