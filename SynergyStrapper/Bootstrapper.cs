@@ -212,33 +212,42 @@ namespace SynergyStrapper
                     throw new ApplicationException("Failed to deduce launch type");
             }
 
-            // ensure only one instance of the bootstrapper is running at the time
-            // so that we don't have stuff like two updates happening simultaneously
+            // Updates remain serialized by default. The explicit 1.0.8 multi-instance
+            // policy only bypasses the Roblox bootstrapper mutex for normal launches;
+            // background updaters always retain serialization.
+            bool allowConcurrentLaunch = App.Settings.Prop.Features.AllowMultipleInstances &&
+                !App.LaunchSettings.BackgroundUpdaterFlag.Active &&
+                !QuitIfMutexExists;
+            AsyncMutex? mutex = null;
 
-            bool mutexExists = Utilities.DoesMutexExist(MutexName);
-
-            if (mutexExists)
+            if (!allowConcurrentLaunch)
             {
-                if (!QuitIfMutexExists)
+                bool mutexExists = Utilities.DoesMutexExist(MutexName);
+                if (mutexExists)
                 {
-                    App.Logger.WriteLine(LOG_IDENT, $"{MutexName} mutex exists, waiting...");
-                    SetStatus(Strings.Bootstrapper_Status_WaitingOtherInstances);
+                    if (!QuitIfMutexExists)
+                    {
+                        App.Logger.WriteLine(LOG_IDENT, $"{MutexName} mutex exists, waiting...");
+                        SetStatus(Strings.Bootstrapper_Status_WaitingOtherInstances);
+                    }
+                    else
+                    {
+                        App.Logger.WriteLine(LOG_IDENT, $"{MutexName} mutex exists, exiting!");
+                        return;
+                    }
                 }
-                else
-                {
-                    App.Logger.WriteLine(LOG_IDENT, $"{MutexName} mutex exists, exiting!");
-                    return;
-                }
+
+                mutex = new AsyncMutex(false, MutexName);
+                await mutex.AcquireAsync(_cancelTokenSource.Token);
+                _mutex = mutex;
+            }
+            else
+            {
+                App.Logger.WriteLine(LOG_IDENT, "Controlled multi-instance launch enabled; Roblox bootstrapper mutex is bypassed.");
             }
 
-            // wait for mutex to be released if it's not yet
-            await using var mutex = new AsyncMutex(false, MutexName);
-            await mutex.AcquireAsync(_cancelTokenSource.Token);
-
-            _mutex = mutex;
-
             // reload our configs since they've likely changed by now
-            if (mutexExists)
+            if (mutex is not null && Utilities.DoesMutexExist(MutexName))
             {
                 App.Settings.Load();
                 App.State.Load();
@@ -291,7 +300,7 @@ namespace SynergyStrapper
                 WindowsRegistry.RegisterPlayer();
 
             if (_launchMode != LaunchMode.Player)
-                await mutex.ReleaseAsync();
+                await (_mutex?.ReleaseAsync() ?? Task.CompletedTask);
 
             if (!App.LaunchSettings.NoLaunchFlag.Active && !_cancelTokenSource.IsCancellationRequested)
             {
@@ -307,7 +316,7 @@ namespace SynergyStrapper
                 StartRoblox();
             }
 
-            await mutex.ReleaseAsync();
+            await (_mutex?.ReleaseAsync() ?? Task.CompletedTask);
 
             Dialog?.CloseBootstrapper();
         }
@@ -341,6 +350,16 @@ namespace SynergyStrapper
                 using RegistryKey key = GetChannelRegistryKey();
                 if (key.GetValue("www.roblox.com") is string value && !String.IsNullOrEmpty(value))
                 {
+                    string configuredChannel = App.Settings.Prop.RobloxChannel.Trim().ToLowerInvariant();
+                    bool explicitlyConfigured = !String.IsNullOrWhiteSpace(configuredChannel) &&
+                        !configuredChannel.Equals(Deployment.DefaultChannel, StringComparison.OrdinalIgnoreCase);
+                    if (!explicitlyConfigured && App.Settings.Prop.Features.EnableChannelPinGuard)
+                    {
+                        App.Logger.WriteLine(LOG_IDENT, $"Removing residual channel pin '{value}' for production ({AppData.RegistryName})");
+                        key.SetValueSafe("www.roblox.com", String.Empty);
+                        return null;
+                    }
+
                     App.Logger.WriteLine(LOG_IDENT, $"Got from registry ({AppData.RegistryName})");
                     return value;
                 }
@@ -446,7 +465,7 @@ namespace SynergyStrapper
                 _latestVersionGuid = newVersionGuid!;
                 _latestVersion = newVersion;
 
-                _latestVersionDirectory = Path.Combine(Paths.Versions, _latestVersionGuid);
+                _latestVersionDirectory = Integrations.FeatureManager.ResolveDeploymentDirectory(_latestVersionGuid);
 
                 string pkgManifestUrl = Deployment.GetLocation($"/{_latestVersionGuid}-rbxPkgManifest.txt");
                 var pkgManifestData = await App.HttpClient.GetStringAsync(pkgManifestUrl);

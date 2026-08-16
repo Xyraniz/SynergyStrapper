@@ -43,7 +43,7 @@ namespace SynergyStrapper.AppData
 
         public virtual string ExecutableName { get; } = null!;
 
-        public string Directory => Path.Combine(Paths.Versions, DistributionState.VersionGuid);
+        public string Directory => Integrations.FeatureManager.GetDeploymentDirectory(DistributionState.VersionGuid);
 
         public string ExecutablePath => Path.Combine(Directory, ExecutableName);
 

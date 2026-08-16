@@ -70,6 +70,7 @@ namespace SynergyStrapper.UI.Elements.Settings
                 return;
 
             _navigationStateRestored = true;
+            RootTitleBar.MinimizeToTray = App.Settings.Prop.Features.MinimizeToTray;
 
             if (String.IsNullOrWhiteSpace(_state.LastPageTag))
                 return;

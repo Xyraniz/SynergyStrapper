@@ -38,6 +38,7 @@ namespace SynergyStrapper
         public static string Version = Assembly.GetExecutingAssembly().GetName().Version!.ToString()[..^2];
 
         public static Bootstrapper? Bootstrapper { get; set; } = null!;
+        public static Integrations.MultiInstanceWatcher? MultiInstanceWatcher { get; set; }
 
         public static bool IsActionBuild => !String.IsNullOrEmpty(BuildMetadata.CommitRef);
 
@@ -240,6 +241,13 @@ namespace SynergyStrapper
 
                 Terminate(ErrorCode.ERROR_INVALID_FUNCTION);
             }
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            MultiInstanceWatcher?.Dispose();
+            MultiInstanceWatcher = null;
+            base.OnExit(e);
         }
 
         protected override void OnStartup(StartupEventArgs e)

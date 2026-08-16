@@ -1,6 +1,7 @@
 ﻿using SynergyStrapper.AppData;
 using SynergyStrapper.Integrations;
 using SynergyStrapper.Models;
+using SynergyStrapper.UI.Elements.Overlay;
 
 namespace SynergyStrapper
 {
@@ -11,6 +12,8 @@ namespace SynergyStrapper
         private readonly WatcherData? _watcherData;
         
         private readonly NotifyIconWrapper? _notifyIcon;
+        private readonly GameOverlayWindow? _overlay;
+        private RuntimeMaintenance? _runtimeMaintenance;
 
         public readonly ActivityWatcher? ActivityWatcher;
 
@@ -69,6 +72,11 @@ namespace SynergyStrapper
             }
 
             _notifyIcon = new(this);
+            if (App.Settings.Prop.Features.EnableGameOverlay)
+            {
+                _overlay = new GameOverlayWindow(ActivityWatcher);
+                _overlay.Show();
+            }
         }
 
         public void KillRobloxProcess() => CloseProcess(_watcherData!.ProcessId, true);
@@ -107,6 +115,7 @@ namespace SynergyStrapper
                 return;
 
             ActivityWatcher?.Start();
+            _runtimeMaintenance = new RuntimeMaintenance(_watcherData.ProcessId);
 
             while (Utilities.GetProcessesSafe().Any(x => x.Id == _watcherData.ProcessId))
                 await Task.Delay(1000);
@@ -125,6 +134,8 @@ namespace SynergyStrapper
         {
             App.Logger.WriteLine("Watcher::Dispose", "Disposing Watcher");
 
+            _runtimeMaintenance?.Dispose();
+            _overlay?.Close();
             _notifyIcon?.Dispose();
             RichPresence?.Dispose();
 

@@ -7,7 +7,7 @@ namespace SynergyStrapper.Utility
     {
         private static GenericTriState _loadStatus = GenericTriState.Unknown;
 
-        public static void Create(string exePath, string exeArgs, string lnkPath)
+        public static void Create(string exePath, string exeArgs, string lnkPath, string? iconPath = null)
         {
             const string LOG_IDENT = "Shortcut::Create";
 
@@ -16,7 +16,8 @@ namespace SynergyStrapper.Utility
 
             try
             {
-                ShellLink.Shortcut.CreateShortcut(exePath, exeArgs, exePath, 0).WriteToFile(lnkPath);
+                string iconTarget = !String.IsNullOrWhiteSpace(iconPath) && File.Exists(iconPath) ? iconPath : exePath;
+                ShellLink.Shortcut.CreateShortcut(exePath, exeArgs, iconTarget, 0).WriteToFile(lnkPath);
 
                 if (_loadStatus != GenericTriState.Successful)
                     _loadStatus = GenericTriState.Successful;

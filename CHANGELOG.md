@@ -1,3 +1,37 @@
+# Changelog
+
+## [1.0.8] — Synergy Strapper
+
+### Deployment y ciclo de vida
+
+Se añadió un sistema de **multiinstancia controlada** con política opt-in, watcher dedicado y guardas para mantener las actualizaciones serializadas. Se incorporó un **directorio estático opcional** con manifest de versión y validación de rutas, además del modo versionado existente. Las preferencias de bandeja separan minimizar u ocultar la ventana de mantener activos el watcher, Discord Rich Presence y las integraciones.
+
+Se añadió una guardia contra **channel pins residuales**. Cuando producción está seleccionado y no existe una elección explícita de canal alternativo, Synergy elimina el pin heredado del registro y deja constancia en el log para evitar que una instalación termine en un canal de pruebas inesperado.
+
+### Mantenimiento y recuperación
+
+El limpiador ahora permite elegir categorías de logs y cache, antigüedad y máximo de archivos por directorio. Incluye modo de previsualización, contadores de candidatos, eliminados, fallidos y omitidos, y conserva las protecciones contra reparse points, traversal, Windows y el log activo.
+
+Se añadió un **memory trimmer** opcional con umbral e intervalo, pausado cuando Roblox no está activo, además de una opción avanzada para cerrar `RobloxCrashHandler.exe`. Ambas funciones están desactivadas por defecto y registran sus acciones sin prometer una reducción garantizada de uso real de memoria o una mejora de rendimiento.
+
+### Roblox App y personalización
+
+Se añadió gestión respaldada de `appStorage.json` para tema, bandeja, inicio automático y visibilidad de detalles de versión o producción. Los cambios se validan como JSON, crean backup y restauran el archivo original si la actualización falla.
+
+La personalización de mods incluye **sonido de muerte** reversible, cuatro ranuras de cursor independientes —`Arrow`, `ArrowFar`, `IBeam` y `Shiftlock`—, previews gestionados, importación y exportación de cursor sets ZIP con manifest y validación contra traversal. Player y Studio pueden usar iconos ICO independientes en sus accesos directos sin modificar el icono predeterminado si no existe un asset personalizado.
+
+### FastFlags y rendimiento
+
+FastFlag Editor conserva los tipos nativos de JSON para booleanos, números y cadenas, y los backups antiguos siguen siendo compatibles. Se incorporó una comprobación de disponibilidad frente a una allowlist versionada con revisión, fecha, hash SHA-256 y estados **Disponible**, **No disponible**, **Desconocida** y **No verificada**. Las flags no disponibles se reportan, pero no se eliminan silenciosamente.
+
+Se añadieron perfiles de rendimiento **Quality**, **Balanced**, **LowPower**, **LowLatency** y **Compatibility**, con diff y backup antes de aplicar. También se incorporó un control de límite FPS con valores Auto, 30, 60, 120, 144, 240 y 360, dejando claro que Roblox, el renderer, la experiencia y el hardware pueden ignorar o limitar el valor.
+
+### Studio y actividad
+
+Se añadió una página Studio-first de **mod packs** con perfiles separados, `manifest.json`, aplicación incremental, archivos `DELETE ` con backup y restauración. Player y Studio mantienen sus modificaciones separadas.
+
+El historial de partidas conserva datos antiguos y añade región, duración de la última sesión, tiempo total aproximado, contador de partidas y rejoin directo. También se incorporó un overlay informativo opcional, click-through y sin inyección, con reloj, región, ping y dimmer. Permanece desactivado por defecto y se cierra con el watcher.
+
 ## [1.0.7] — Synergy Strapper
 
 ### Branding y calidad visual

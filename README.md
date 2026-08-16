@@ -17,9 +17,15 @@ La documentación de instalación, configuración y diagnóstico está disponibl
 
 Synergy Strapper instala y actualiza Roblox Player y Roblox Studio, ofrece una ventana de configuración, estilos de bootstrapper personalizables, gestión reversible de FastFlags, accesos directos, integraciones opcionales y herramientas de diagnóstico. El proyecto está diseñado para equipos Windows 10 o posteriores.
 
+### Novedades de la versión 1.0.8
+
+La versión 1.0.8 incorpora multiinstancia controlada, directorio estático opcional, guardia contra channel pins residuales, cleaner configurable con preview, memory trimmer opt-in, control avanzado del crash handler y preferencias independientes de bandeja y ciclo de vida.
+
+También añade gestión respaldada de `appStorage.json`, sonido de muerte reversible, cuatro ranuras de cursor independientes con importación/exportación ZIP, iconos separados para Player y Studio, disponibilidad versionada de FastFlags, preservación de tipos JSON, perfiles de rendimiento reversibles, control de FPS, mod packs especializados para Studio, historial con región y tiempo total, y un overlay informativo click-through sin inyección. Las opciones de riesgo están desactivadas por defecto y las operaciones destructivas crean backups o solicitan confirmación.
+
 ### Novedades de la versión 1.0.7
 
-La versión 1.0.7 corrige la representación visual del branding de Synergy Strapper en la ventana principal, el menú de lanzamiento y las ventanas auxiliares. Las superficies WPF usan ahora el PNG transparente de alta resolución y los iconos nativos incluyen tamaños múltiples para evitar fondos opacos y pérdida de nitidez.
+La versión 1.0.7 corrigió la representación visual del branding de Synergy Strapper en la ventana principal, el menú de lanzamiento y las ventanas auxiliares. Las superficies WPF usan ahora el PNG transparente de alta resolución y los iconos nativos incluyen tamaños múltiples para evitar fondos opacos y pérdida de nitidez.
 
 ### Novedades de la versión 1.0.6
 
@@ -42,7 +48,7 @@ dotnet build SynergyStrapper.sln -c Release
 dotnet publish SynergyStrapper/SynergyStrapper.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
 ```
 
-La publicación v1.0.7 es autocontenida: incluye el runtime de .NET Desktop para reducir la posibilidad de que el usuario tenga que instalar dependencias manualmente. El artefacto es más grande y la publicación recomendada debe realizarse en Windows para conservar correctamente los recursos del apphost y firmarse con un certificado controlado por el distribuidor.
+La publicación v1.0.8 es autocontenida: incluye el runtime de .NET Desktop para reducir la posibilidad de que el usuario tenga que instalar dependencias manualmente. El artefacto debe generarse en Windows para conservar correctamente los recursos del apphost; el workflow de release realiza el build, la publicación single-file y la validación de tamaño y SHA-256 antes de adjuntar el ejecutable.
 
 ## Atribución y licencias
 

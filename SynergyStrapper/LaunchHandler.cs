@@ -5,6 +5,7 @@ using Windows.Win32.Foundation;
 
 using SynergyStrapper.UI.Elements.Dialogs;
 using SynergyStrapper.Enums;
+using SynergyStrapper.Integrations;
 
 namespace SynergyStrapper
 {
@@ -239,6 +240,7 @@ namespace SynergyStrapper
             }
 
             // start bootstrapper and show the bootstrapper modal if we're not running silently
+            App.MultiInstanceWatcher ??= MultiInstanceWatcher.Start();
             App.Logger.WriteLine(LOG_IDENT, "Initializing bootstrapper");
             App.Bootstrapper = new Bootstrapper(launchMode);
             IBootstrapperDialog? dialog = null;
@@ -267,6 +269,15 @@ namespace SynergyStrapper
             });
 
             dialog?.ShowBootstrapper();
+
+            if (App.Settings.Prop.Features.CloseSettingsOnLaunch)
+            {
+                Application.Current.Dispatcher.BeginInvoke(() =>
+                {
+                    foreach (Window window in Application.Current.Windows.OfType<UI.Elements.Settings.MainWindow>().ToList())
+                        window.Close();
+                });
+            }
 
             App.Logger.WriteLine(LOG_IDENT, "Exiting");
         }

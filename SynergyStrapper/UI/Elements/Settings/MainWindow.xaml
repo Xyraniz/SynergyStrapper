@@ -67,6 +67,7 @@
                     <ui:NavigationItem Content="Global Settings" PageType="{x:Type pages:GlobalSettingsPage}" Icon="GlobeLocation24" Tag="globalsettings" />
                     <ui:NavigationItem Content="{x:Static resources:Strings.Menu_Mods_Title}" PageType="{x:Type pages:ModsPage}" Icon="WrenchScrewdriver20" Tag="mods" />
                     <ui:NavigationItem Content="Deployment Channel" PageType="{x:Type pages:ChannelPage}" Icon="CloudArchive24" Tag="channel" />
+                    <ui:NavigationItem Content="Synergy 1.0.8 Features" PageType="{x:Type pages:FeaturesPage}" Icon="Sparkle24" Tag="features" />
                     <ui:NavigationSeparator />
                     <ui:NavigationItem Content="Tools" IsEnabled="False" Opacity="0.6" />
                     <ui:NavigationItem Content="{x:Static resources:Strings.Common_Shortcuts}" PageType="{x:Type pages:ShortcutsPage}" Icon="Apps28" Tag="shortcuts" />

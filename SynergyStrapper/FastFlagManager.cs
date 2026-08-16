@@ -31,8 +31,8 @@ namespace SynergyStrapper
             {
                 bool existedBefore = OriginalProp.TryGetValue(name, out object? beforeValue);
                 bool existsNow = Prop.TryGetValue(name, out object? afterValue);
-                string? before = existedBefore ? beforeValue?.ToString() : null;
-                string? after = existsNow ? afterValue?.ToString() : null;
+                string? before = existedBefore ? FormatValue(beforeValue) : null;
+                string? after = existsNow ? FormatValue(afterValue) : null;
 
                 if (!existedBefore && existsNow)
                     changes.Add(new FastFlagChange(name, FastFlagChangeKind.Added, null, after));
@@ -81,8 +81,9 @@ namespace SynergyStrapper
             { TextureQuality.Level3, "3" },
         };
 
-        // all fflags are stored as strings
-        // to delete a flag, set the value as null
+        // Values retain their native JSON type whenever one is supplied. A string remains
+        // a string for backwards compatibility; JsonElement values are converted to CLR
+        // primitives so exported ClientAppSettings.json remains interoperable.
         public void SetValue(string key, object? value)
         {
             const string LOG_IDENT = "FastFlagManager::SetValue";
@@ -98,17 +99,17 @@ namespace SynergyStrapper
             {
                 if (Prop.TryGetValue(key, out object? currentValue))
                 {
-                    if (String.Equals(currentValue?.ToString(), value.ToString(), StringComparison.Ordinal))
+                    if (String.Equals(FormatValue(currentValue), FormatValue(value), StringComparison.Ordinal))
                         return;
 
-                    App.Logger.WriteLine(LOG_IDENT, $"Changing of '{key}' from '{currentValue}' to '{value}' is pending");
+                    App.Logger.WriteLine(LOG_IDENT, $"Changing of '{key}' from '{FormatValue(currentValue)}' to '{FormatValue(value)}' is pending");
                 }
                 else
                 {
                     App.Logger.WriteLine(LOG_IDENT, $"Setting of '{key}' to '{value}' is pending");
                 }
 
-                Prop[key] = value.ToString()!;
+                Prop[key] = NormalizeValue(value)!;
             }
         }
 
@@ -117,7 +118,7 @@ namespace SynergyStrapper
         {
             // check if we have an updated change for it pushed first
             if (Prop.TryGetValue(key, out object? value) && value is not null)
-                return value.ToString();
+                return FormatValue(value);
 
             return null;
         }
@@ -178,8 +179,9 @@ namespace SynergyStrapper
 
                 foreach (var pair in loaded)
                 {
-                    if (pair.Value is not null)
-                        Prop[pair.Key] = pair.Value.ToString()!;
+                                            if (pair.Value is not null)
+                            Prop[pair.Key] = NormalizeValue(pair.Value)!;
+
                 }
 
                 App.Logger.WriteLine("FastFlagManager::LoadBackup", $"Loaded backup '{safeName}'.");
@@ -276,17 +278,43 @@ namespace SynergyStrapper
             return mapping.First().Key;
         }
 
+        public object? GetTypedValue(string key)
+            => Prop.TryGetValue(key, out object? value) ? value : null;
+
         public override void Save()
         {
-            // convert all flag values to strings before saving
-
-            foreach (string key in Prop.Keys.ToList())
-                Prop[key] = Prop[key]?.ToString() ?? String.Empty;
-
             base.Save();
+            OriginalProp = Prop.ToDictionary(x => x.Key, x => x.Value, StringComparer.OrdinalIgnoreCase);
+        }
 
-            // clone the dictionary
-            OriginalProp = new(Prop);
+        private static string FormatValue(object? value)
+        {
+            if (value is JsonElement element)
+                return element.GetRawText();
+            return value switch
+            {
+                null => String.Empty,
+                bool boolean => boolean ? "true" : "false",
+                IFormattable formattable => formattable.ToString(null, CultureInfo.InvariantCulture) ?? String.Empty,
+                _ => value.ToString() ?? String.Empty
+            };
+        }
+
+        private static object? NormalizeValue(object? value)
+        {
+            if (value is not JsonElement element)
+                return value;
+
+            return element.ValueKind switch
+            {
+                JsonValueKind.True => true,
+                JsonValueKind.False => false,
+                JsonValueKind.Number when element.TryGetInt64(out long integer) => integer,
+                JsonValueKind.Number when element.TryGetDouble(out double number) => number,
+                JsonValueKind.String => element.GetString() ?? String.Empty,
+                JsonValueKind.Null => null,
+                _ => element.GetRawText()
+            };
         }
 
         private static bool DictionariesEqual(IReadOnlyDictionary<string, object> left, IReadOnlyDictionary<string, object> right)
@@ -297,7 +325,7 @@ namespace SynergyStrapper
             foreach (var pair in left)
             {
                 if (!right.TryGetValue(pair.Key, out object? otherValue)
-                    || !String.Equals(pair.Value?.ToString(), otherValue?.ToString(), StringComparison.Ordinal))
+                    || !String.Equals(FormatValue(pair.Value), FormatValue(otherValue), StringComparison.Ordinal))
                 {
                     return false;
                 }
@@ -310,8 +338,11 @@ namespace SynergyStrapper
         {
             bool result = base.Load(alertFailure);
 
+            foreach (string key in Prop.Keys.ToList())
+                Prop[key] = NormalizeValue(Prop[key])!;
+
             // clone the dictionary
-            OriginalProp = new(Prop);
+            OriginalProp = Prop.ToDictionary(x => x.Key, x => x.Value, StringComparer.OrdinalIgnoreCase);
 
             if (GetPreset("Rendering.ManualFullscreen") != "False")
                 SetPreset("Rendering.ManualFullscreen", "False");

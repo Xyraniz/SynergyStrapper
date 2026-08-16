@@ -27,6 +27,13 @@ namespace SynergyStrapper
         private static readonly Regex IntFilterPattern = new("^([\\d]{1,})?(;[\\d]{1,})+$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex StringFilterPattern = new("^[^;]*(;[\\d]{1,})+$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
+        public static bool IsValidName(string name)
+        {
+            return !String.IsNullOrWhiteSpace(name)
+                && ValidPrefixes.Any(name.StartsWith)
+                && name.All(x => Char.IsLetterOrDigit(x) || x == '_');
+        }
+
         public static IReadOnlyList<FastFlagHealthIssue> Validate(IReadOnlyDictionary<string, object> flags)
         {
             var issues = new List<FastFlagHealthIssue>();

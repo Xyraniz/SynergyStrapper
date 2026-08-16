@@ -117,12 +117,14 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
         private void UpdateHealthStatus()
         {
             IReadOnlyList<FastFlagHealthIssue> issues = App.FastFlags.GetHealthIssues();
+            var availability = SynergyStrapper.Integrations.FastFlagAvailabilityService.CheckCurrentFlags();
+            int unavailable = availability.Count(x => x.Status == SynergyStrapper.Integrations.FastFlagAvailability.Unavailable);
             int errors = issues.Count(x => x.Severity == FastFlagHealthSeverity.Error);
             int warnings = issues.Count - errors;
 
-            HealthStatusTextBlock.Text = issues.Count == 0
+            HealthStatusTextBlock.Text = issues.Count == 0 && unavailable == 0
                 ? "Health: OK"
-                : $"Health: {errors} error{(errors == 1 ? "" : "s")}, {warnings} warning{(warnings == 1 ? "" : "s")}";
+                : $"Health: {errors} error{(errors == 1 ? "" : "s")}, {warnings} warning{(warnings == 1 ? "" : "s")}, {unavailable} unavailable";
         }
 
         private void HealthCheckButton_Click(object sender, RoutedEventArgs e)
@@ -133,7 +135,9 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
             int warnings = issues.Count - errors;
 
             var report = new StringBuilder();
-            report.AppendLine($"FastFlag Health Check: {errors} error{(errors == 1 ? "" : "s")}, {warnings} warning{(warnings == 1 ? "" : "s")}");
+            var availability = SynergyStrapper.Integrations.FastFlagAvailabilityService.CheckCurrentFlags();
+            int unavailable = availability.Count(x => x.Status == SynergyStrapper.Integrations.FastFlagAvailability.Unavailable);
+            report.AppendLine($"FastFlag Health Check: {errors} error{(errors == 1 ? "" : "s")}, {warnings} warning{(warnings == 1 ? "" : "s")}, {unavailable} unavailable");
             report.AppendLine(changes.Count == 0
                 ? "No pending changes since the last save."
                 : $"Pending changes: {changes.Count}");
@@ -166,6 +170,14 @@ namespace SynergyStrapper.UI.Elements.Settings.Pages
 
                 if (issues.Count > 40)
                     report.AppendLine($"  ...and {issues.Count - 40} more.");
+            }
+
+            if (unavailable > 0)
+            {
+                report.AppendLine();
+                report.AppendLine("Flags not present in the cached allowlist:");
+                foreach (var entry in availability.Where(x => x.Status == SynergyStrapper.Integrations.FastFlagAvailability.Unavailable).Take(40))
+                    report.AppendLine($"  [Unavailable] {entry.Name} (source {entry.SourceRevision})");
             }
 
             UpdateHealthStatus();
