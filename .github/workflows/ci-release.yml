@@ -64,6 +64,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout release source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          submodules: false
+
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
@@ -77,12 +83,6 @@ jobs:
           test -s release/SynergyStrapper.exe
           mv release/SynergyStrapper.exe SynergyStrapper.exe
           sha256sum SynergyStrapper.exe > SynergyStrapper.exe.sha256
-
-      - name: Checkout release source
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.sha }}
-          submodules: false
 
       - name: Resolve release metadata
         id: metadata
