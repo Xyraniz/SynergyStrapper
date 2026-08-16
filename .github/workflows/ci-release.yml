@@ -71,7 +71,7 @@ jobs:
           submodules: false
 
       - name: Download build artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: SynergyStrapper-Release-${{ github.run_id }}
           path: release
