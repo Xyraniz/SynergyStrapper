@@ -78,6 +78,12 @@ jobs:
           mv release/SynergyStrapper.exe SynergyStrapper.exe
           sha256sum SynergyStrapper.exe > SynergyStrapper.exe.sha256
 
+      - name: Checkout release source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          submodules: false
+
       - name: Resolve release metadata
         id: metadata
         shell: bash
