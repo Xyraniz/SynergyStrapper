@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.0] — Synergy Strapper
+
+### Correcciones y estabilidad
+
+Se corrigió el cierre de la aplicación al abrir **Mods** cuando faltaban recursos embebidos de los cursores competitivos. La carga de recursos ahora informa los faltantes de forma segura y se reparó el comando de configuración de compatibilidad de esa página.
+
+### Versiones e interfaz
+
+La versión del producto quedó centralizada en una única variable de compilación. Se eliminó la página obsoleta de Features asociada a 1.0.8 y se retiró su referencia de la interfaz.
+
 ## [1.0.9] — Synergy Strapper
 
 ### Estabilidad y Mods
