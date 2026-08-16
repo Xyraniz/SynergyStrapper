@@ -212,8 +212,8 @@ namespace SynergyStrapper
                     throw new ApplicationException("Failed to deduce launch type");
             }
 
-            // Updates remain serialized by default. The explicit 1.0.8 multi-instance
-            // policy only bypasses the Roblox bootstrapper mutex for normal launches;
+            // Updates remain serialized by default. The optional multi-instance policy
+            // only bypasses the Roblox bootstrapper mutex for normal launches;
             // background updaters always retain serialization.
             bool allowConcurrentLaunch = App.Settings.Prop.Features.AllowMultipleInstances &&
                 !App.LaunchSettings.BackgroundUpdaterFlag.Active &&

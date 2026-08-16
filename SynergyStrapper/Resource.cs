@@ -9,8 +9,12 @@ namespace SynergyStrapper
 
         public static Stream GetStream(string name)
         {
-            string path = resourceNames.Single(str => str.EndsWith(name));
-            return assembly.GetManifestResourceStream(path)!;
+            string? path = resourceNames.FirstOrDefault(str => str.EndsWith(name, StringComparison.OrdinalIgnoreCase));
+            if (path is null)
+                throw new System.Resources.MissingManifestResourceException($"Embedded resource '{name}' was not found.");
+
+            return assembly.GetManifestResourceStream(path)
+                ?? throw new System.Resources.MissingManifestResourceException($"Embedded resource '{path}' could not be opened.");
         }
 
         public static async Task<byte[]> Get(string name)

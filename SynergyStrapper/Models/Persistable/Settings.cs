@@ -40,7 +40,7 @@ namespace SynergyStrapper.Models.Persistable
         // mod preset configuration
         public bool UseDisableAppPatch { get; set; } = false;
 
-        // Synergy Strapper 1.0.8 feature configuration
+        // Optional feature configuration
         public FeatureSettings Features { get; set; } = new();
     }
 }

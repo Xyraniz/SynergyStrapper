@@ -30,7 +30,7 @@ dotnet build SynergyStrapper.sln -c Release
 dotnet publish SynergyStrapper/SynergyStrapper.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
 ```
 
-La publicación v1.0.8 es autocontenida: incluye el runtime de .NET Desktop para reducir la posibilidad de que el usuario tenga que instalar dependencias manualmente. El artefacto debe generarse en Windows para conservar correctamente los recursos del apphost; el workflow de release realiza el build, la publicación single-file y la validación de tamaño y SHA-256 antes de adjuntar el ejecutable.
+Las publicaciones son autocontenidas: incluyen el runtime de .NET Desktop para reducir la posibilidad de que el usuario tenga que instalar dependencias manualmente. El artefacto debe generarse en Windows para conservar correctamente los recursos del apphost; el workflow de release realiza el build, la publicación single-file y la validación de tamaño y SHA-256 antes de adjuntar el ejecutable.
 
 ## Atribución y licencias
 
@@ -46,8 +46,8 @@ El código se mantiene como un fork independiente. Los cambios de rendimiento se
 
 Los ejecutables publicados deben distribuirse como **assets de GitHub Releases**, no como enlaces a archivos arbitrarios ni como binarios descargados desde terceros. El cliente consulta la última release publicada, selecciona exclusivamente el asset `SynergyStrapper.exe`, comprueba su tamaño y valida su SHA-256 antes de relanzar el proceso de actualización.
 
-El workflow `CI (Release)` compila siempre desde el código fuente en un runner Windows. Para una release normal, crea un tag semántico con el formato `vX.Y.Z` y súbelo a GitHub; el workflow compilará el ejecutable autocontenido single-file `win-x64` y adjuntará `SynergyStrapper.exe` junto con `SynergyStrapper.exe.sha256` a una release publicada. El tag y la versión de `SynergyStrapper/SynergyStrapper.csproj` deben coincidir.
+El workflow `CI (Release)` compila siempre desde el código fuente en un runner Windows. Para una release normal, crea un tag semántico con el formato `vX.Y.Z` y súbelo a GitHub; el workflow compilará el ejecutable autocontenido single-file `win-x64` y adjuntará `SynergyStrapper.exe` junto con `SynergyStrapper.exe.sha256` a una release publicada. El tag debe coincidir con `SynergyStrapperVersion` en `Directory.Build.props`, que es la única fuente de verdad de la versión del producto.
 
-El mismo workflow se puede ejecutar manualmente desde **Actions → CI (Release)**. El parámetro `release_tag` permite crear o reemplazar una release existente, y `source_ref` indica la rama o commit que se debe compilar. Esta modalidad se utiliza para corregir o regenerar los assets de una release ya publicada, por ejemplo `v1.0.1`, sin crear una nueva versión. El repositorio ya no necesita almacenar un `.exe` en la raíz.
+El mismo workflow se puede ejecutar manualmente desde **Actions → CI (Release)**. El parámetro `release_tag` permite crear o reemplazar una release existente, y `source_ref` indica la rama o commit que se debe compilar. Esta modalidad se utiliza para corregir o regenerar los assets de una release ya publicada sin crear una nueva versión. El repositorio ya no necesita almacenar un `.exe` en la raíz.
 
 > El actualizador no fuerza una actualización cuando GitHub no responde, cuando no existe una release publicada compatible o cuando la integridad del asset no se puede comprobar. En esos casos, la instalación actual permanece intacta y el usuario puede abrir la página oficial de releases.

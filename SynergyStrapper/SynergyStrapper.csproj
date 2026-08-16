@@ -7,8 +7,8 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
     <ApplicationIcon>SynergyStrapper.ico</ApplicationIcon>
-    <Version>1.0.9</Version>
-    <FileVersion>1.0.9</FileVersion>
+    <Version>$(SynergyStrapperVersion)</Version>
+    <FileVersion>$(SynergyStrapperVersion)</FileVersion>
     <AssemblyName>SynergyStrapper</AssemblyName>
     <Product>Synergy Strapper</Product>
     <Company>Xyraniz</Company>
@@ -26,8 +26,8 @@
     <Resource Include="Resources\BootstrapperStyles\ByfronDialog\ByfronLogoDark.jpg" />
     <Resource Include="Resources\BootstrapperStyles\ByfronDialog\ByfronLogoLight.jpg" />
     <Resource Include="Resources\LogoHighRes.png" />
-    <Resource Include="Resources\Cursor.Competitive.Circle.png" />
-    <Resource Include="Resources\Cursor.Competitive.Crosshair.png" />
+    <EmbeddedResource Include="Resources\Cursor.Competitive.Circle.png" />
+    <EmbeddedResource Include="Resources\Cursor.Competitive.Crosshair.png" />
     <Resource Include="Resources\BootstrapperStyles\ByfronDialog\Matt.png" />
     <Resource Include="Resources\MessageBox\Error.png" />
     <Resource Include="Resources\MessageBox\Information.png" />

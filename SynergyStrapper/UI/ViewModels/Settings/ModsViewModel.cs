@@ -95,6 +95,7 @@ namespace SynergyStrapper.UI.ViewModels.Settings
         }
 
         public ICommand OpenModsFolderCommand => new RelayCommand(OpenModsFolder);
+        public ICommand OpenCompatSettingsCommand => new RelayCommand(OpenCompatSettings);
 
         public Visibility ChooseCustomFontVisibility => !String.IsNullOrEmpty(TextFontTask.NewState) ? Visibility.Collapsed : Visibility.Visible;
 
