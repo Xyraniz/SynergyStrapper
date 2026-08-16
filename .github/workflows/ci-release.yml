@@ -33,7 +33,7 @@ jobs:
       artifact-id: ${{ steps.upload-artifact.outputs.artifact-id }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ inputs.source_ref || github.ref }}
           submodules: true
@@ -65,7 +65,7 @@ jobs:
 
     steps:
       - name: Checkout release source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.sha }}
           submodules: false
