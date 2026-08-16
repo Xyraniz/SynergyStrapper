@@ -6,7 +6,7 @@ namespace SynergyStrapper.Integrations
 {
     public class DiscordRichPresence : IDisposable
     {
-        private readonly DiscordRpcClient _rpcClient = new("1005469189907173486");
+        private readonly DiscordRpcClient _rpcClient = new("1538393990787764276");
         private readonly ActivityWatcher _activityWatcher;
         private readonly Queue<Message> _messageQueue = new();
 
